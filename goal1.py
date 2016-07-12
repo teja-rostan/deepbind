@@ -2,6 +2,7 @@ from Bio import SeqIO, Entrez
 import pandas as pd
 import numpy as np
 import subprocess
+import multiprocessing as mp
 
 
 def ncbi_read(id):
@@ -14,7 +15,7 @@ def seqio_read(filename):
     return SeqIO.read(open(filename, "r"), "fasta")
 
 
-def get_seq_and_ID(dataname, sequence_path, id_path, threshold):
+def get_seq_and_id(dataname, sequence_path, id_path, threshold):
     sequences = []
     record_ids = []
     for record in SeqIO.parse(dataname, "fasta"):
@@ -32,27 +33,51 @@ def num_of_seq(dataname):
     print("Number of sequences:", num_seq)
 
 
-def get_leq(dataname, threshold):  # get the number of sequences that has threshold value and less nucleotides
+def get_leq(dataname, threshold):
     less = np.sum([1 for record in SeqIO.parse(dataname, "fasta") if len(record.seq) <= threshold])
     print("Number of sequences less or equal " + str(threshold) + ":", less)
 
 
-def create_ranked_records(promoter_ids, results_file):
+def create_ranked_records(promoter_ids, results_txt):
     df1 = pd.read_csv(promoter_ids, header=None)
-    df2 = pd.read_csv(results_file, delimiter="\t")
-    frames = [df1, df2]
-    promoter_scores = pd.concat(frames, axis=1)
+    df2 = pd.read_csv(results_txt, delimiter="\t")
+    promoter_scores = pd.concat([df1, df2], axis=1)
     promoter_scores = promoter_scores.rename(columns={0: 'promoterID'})
     promoter_scores.to_csv("goal1/promoter_scores.csv", sep='\t')
 
 
-def deep_bind_exec(features_ids, promoter_seq, results_file):
-    # subprocess.run(args)  # % deepbind features_ids < promoter_seq > results_file
-    input = open(promoter_seq, "r")
-    output = open(results_file, "w")
-    print('subprocess deepbind starting...')
-    subprocess.run(["./deepbind", features_ids], stdin=input, stdout=output)
-    print('...subprocess deepbind finnished')
+def deep_bind_exec(features_ids, promoter_seq, results_txt):
+    # % deepbind features_ids < promoter_seq > results_file
+    promoter_seq_file = open(promoter_seq, "r")
+    results_file = open(results_txt, "w")
+    # print("Starting deepbind subprocess...")
+    subprocess.run(["./deepbind", features_ids], stdin=promoter_seq_file, stdout=results_file)
+    # print("...deepbind subprocess ended.")
+
+
+def join_results(result_paths):
+    frames = []
+    for result_path in result_paths:
+        frames.append(pd.read_csv(result_path))
+        subprocess.run(['rm', result_path])
+    results = pd.concat(frames, axis=1)
+    results.to_csv("goal1/results.txt", sep='\t', index=None)
+
+
+def deep_bind_exec_parallel(features_ids, promoter_seq):
+    N = 4  # our titan computer has 4 cores
+    p = mp.Pool(N)
+    result_paths = []
+    feature_list =[]
+    promoter_seq_list = []
+    features = open(features_ids, "r")
+    for i, feature in enumerate(features):
+        result_paths.append('goal1/result' + str(i) + '.txt')
+        feature_list.append(feature)
+        promoter_seq_list.append(promoter_seq)
+    zipped = zip(feature_list, promoter_seq_list, result_paths)
+    p.starmap(deep_bind_exec, zipped)
+    join_results(result_paths)
 
 
 def main():
@@ -62,13 +87,14 @@ def main():
 
     promoter_seq = "goal1/promoter.seq"
     promoter_ids = "goal1/promoter.ids"
-    get_seq_and_ID(dataname, promoter_seq, promoter_ids, 50)
+    get_seq_and_id(dataname, promoter_seq, promoter_ids, 50)
 
     features_ids = "goal1/features.ids"
-    results_file = "goal1/results.txt"
-    deep_bind_exec(features_ids, promoter_seq, results_file)
+    results_txt = "goal1/results.txt"
+    # deep_bind_exec(features_ids, promoter_seq, results_txt)
+    deep_bind_exec_parallel(features_ids, promoter_seq)
 
-    create_ranked_records(promoter_ids, results_file)
+    create_ranked_records(promoter_ids, results_txt)
 
 
 if __name__ == '__main__':
