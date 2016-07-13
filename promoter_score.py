@@ -10,7 +10,13 @@ help = \
 
 
     Usage:
-        python promoter_score.py <fasta_path> <features_path> <deepbind_path> <results_path> <num_of_cpu>
+        python promoter_score.py <fasta_path> <features_path> <deepbind_path> <results_path> <num_of_cpu>,
+        where <num_of_cpu> is optional (default is 4).
+
+    Example:
+        python promoter_score.py promoter_sequences/promoter_sequences.fasta
+        goal1/features.ids deepbind goal1/promoter_scores.csv 12,
+        where deepbind executable is in same dir.
 """
 
 from Bio import SeqIO
