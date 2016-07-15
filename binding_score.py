@@ -88,7 +88,6 @@ def create_ranked_records(promoter_ids, results_txt, final_results_file):
     promoter_scores = pd.concat([df1, df2], axis=1)
     promoter_scores = promoter_scores.rename(columns={0: 'ID'})
     promoter_scores.to_csv(final_results_file, sep='\t')
-    print("Program has successfully written scores at " + final_results_file + ".")
 
 
 def remove_temp_files(promoter_seq, promoter_ids, results_txt):
@@ -97,7 +96,7 @@ def remove_temp_files(promoter_seq, promoter_ids, results_txt):
     subprocess.run(['rm', results_txt])
 
 
-def get_binding_score(fasta_file, features_ids, deepbind_path, final_results_file, num_cpu, max_seq_len):
+def get_binding_score(fasta_file, features_ids, deepbind_path, num_cpu, max_seq_len):
     promoter_seq = "promoter.seq"
     promoter_ids = "promoter.ids"
     results_txt = "results.txt"
@@ -129,7 +128,7 @@ def main():
     print("Program running on " + str(num_cpu) + " CPU cores.")
 
     promoter_seq, promoter_ids, results_txt = get_binding_score(fasta_file, features_ids, deepbind_path,
-                                                                final_results_file, num_cpu, max_seq_len)
+                                                                num_cpu, max_seq_len)
     create_ranked_records(promoter_ids, results_txt, final_results_file)
     remove_temp_files(promoter_seq, promoter_ids, results_txt)
 
