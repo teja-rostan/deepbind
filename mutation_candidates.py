@@ -28,12 +28,13 @@ def split_fasta_seqs(fasta_file):
     return sequence_paths, fasta_dir
 
 
-def remove_sequences(sequence_paths, mutations_file):
+def remove_sequences(sequence_paths, mutations_file, subseqs_file):
     """ Removes all temp files of fasta sequences."""
 
     for sequence_path in sequence_paths:
         subprocess.run(['rm', sequence_path])
     subprocess.run(['rm', mutations_file])
+    subprocess.run(['rm', subseqs_file])
 
 
 def make_mutated_seqs(fasta_file, mutations_file):
@@ -87,11 +88,11 @@ def get_score_changes(mutations_file, features_ids, deepbind_path, p, original_s
     return score_changes
 
 
-def get_score_changes_advanced(mutations, features_ids, deepbind_path, p, original_score, results_txt, motif_len):
+def get_score_changes_advanced(mutations, features_ids, deepbind_path, p, original_score, results_txt, subseqs_file,
+                               motif_len):
     """ Get sensitivity map for long sequences and with several binding sites that each need to be
     recognized independently."""
 
-    subseqs_file = 'subsequences.seq'
     mutations_np = np.array([list(mutation) for mutation in mutations])
 
     final_changed_scores = np.zeros((4, mutations_np.shape[1] - 1))
@@ -169,6 +170,7 @@ def main():
     output_handle.close()
     results_txt = "results.txt"
     mutations_file = 'mutations.seq'
+    subseqs_file = 'subsequences.seq'
     ranked_scores = []
     sequence_ids = []
     print("Program running on " + str(num_cpu) + " CPU cores.")
@@ -184,12 +186,12 @@ def main():
         mutations = make_mutated_seqs(sequence_path, mutations_file)
 
         score_changes = get_score_changes_advanced(mutations, features_ids, deepbind_path, p, original_score,
-                                                   results_txt, motif_len)
+                                                   results_txt, subseqs_file, motif_len)
 
         ranked_scores = get_ranked_scores(ranked_scores, score_changes)
         write_score_changes(score_changes, final_results_file, sequence_id)
 
-    remove_sequences(sequence_paths, mutations_file)
+    remove_sequences(sequence_paths, mutations_file, subseqs_file)
     write_ranked_list(ranked_scores, final_results_file, sequence_ids)
     ss.remove_temp_files(promoter_seq, promoter_ids, results_txt)
     subprocess.run(['rmdir', fasta_dir])
