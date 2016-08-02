@@ -4,6 +4,7 @@ import numpy as np
 import subprocess
 import multiprocessing as mp
 import sys
+import os
 import time
 
 help = \
@@ -29,6 +30,8 @@ help = \
 
 
 def num_of_seq_and_leq(fasta_file, threshold):
+    """ Prints number of sequences in fasta file and number of sequences less or equal of 1000 nucleotides."""
+
     num_seq = len(list(SeqIO.parse(fasta_file, "fasta")))
     print("Number of sequences:", num_seq)
     less = np.sum([1 for record in SeqIO.parse(fasta_file, "fasta") if len(record.seq) <= threshold])
@@ -36,6 +39,8 @@ def num_of_seq_and_leq(fasta_file, threshold):
 
 
 def get_seq_and_id(fasta_file, sequence_path, id_path, threshold):
+    """ Extracts raw sequence strings and ids to separate files."""
+
     sequences = []
     record_ids = []
     for record in SeqIO.parse(fasta_file, "fasta"):
@@ -49,22 +54,16 @@ def get_seq_and_id(fasta_file, sequence_path, id_path, threshold):
 
 
 def deep_bind_exec(features_ids, promoter_seq, results_txt, deepbind_path):
-    # % deepbind features_ids < promoter_seq > results_file
+    """ Executes the deepbind program: deepbind features_ids < promoter_seq > results_file """
+
     promoter_seq_file = open(promoter_seq, "r")
     results_file = open(results_txt, "w")
     subprocess.run([deepbind_path, features_ids], stdin=promoter_seq_file, stdout=results_file)
 
 
-def join_results(result_paths, results_txt):
-    frames = []
-    for result_path in result_paths:
-        frames.append(pd.read_csv(result_path))
-        subprocess.run(['rm', result_path])
-    results = pd.concat(frames, axis=1)
-    results.to_csv(results_txt, sep='\t', index=None)
-
-
 def deep_bind_exec_parallel(features_ids, promoter_seq, results_txt, deepbind_path, p):
+    """ Executes the deepbind program in parallel with starmap. """
+
     result_paths = []
     feature_list = []
     promoter_seq_list = []
@@ -80,7 +79,32 @@ def deep_bind_exec_parallel(features_ids, promoter_seq, results_txt, deepbind_pa
     join_results(result_paths, results_txt)
 
 
-def create_ranked_records(promoter_ids, results_txt, final_results_file):
+def get_binding_score(fasta_file, features_ids, deepbind_path, p, max_seq_len):
+    """ Prepares and calls deep_bind_exec_parallel. """
+
+    promoter_seq = "promoter.seq"
+    promoter_ids = "promoter.ids"
+    results_txt = "results.txt"
+
+    get_seq_and_id(fasta_file, promoter_seq, promoter_ids, max_seq_len)
+    deep_bind_exec_parallel(features_ids, promoter_seq, results_txt, deepbind_path, p)
+    return promoter_seq, promoter_ids, results_txt
+
+
+def join_results(result_paths, results_txt):
+    """ Concatenates id of sequence with scores."""
+
+    frames = []
+    for result_path in result_paths:
+        frames.append(pd.read_csv(result_path))
+        subprocess.run(['rm', result_path])
+    results = pd.concat(frames, axis=1)
+    results.to_csv(results_txt, sep='\t', index=None)
+
+
+def write_scores(promoter_ids, results_txt, final_results_file):
+    """ Writes joined results to "final_results_file"."""
+
     df1 = pd.read_csv(promoter_ids, header=None)
     df2 = pd.read_csv(results_txt, delimiter="\t")
     promoter_scores = pd.concat([df1, df2], axis=1)
@@ -88,22 +112,29 @@ def create_ranked_records(promoter_ids, results_txt, final_results_file):
     promoter_scores.to_csv(final_results_file, sep='\t')
 
 
+def write_ranked_scores(results_txt, promoter_ids, final_results_file):
+    """ Computes ranks of biggest scores for every feature (TF)."""
+
+    df1 = pd.read_csv(promoter_ids, header=None)
+    df2 = pd.read_csv(results_txt, delimiter="\t")
+    ranks = df1.as_matrix()[np.argsort(df2.as_matrix(), axis=0)[::-1]][:, :, 0]
+    data_dir, data_file = os.path.split(final_results_file)
+    data_path = data_dir + "/ranked_list.csv"
+    ranks_handle = open(data_path, "w")
+    print(ranks.shape)
+    df = pd.DataFrame(data=ranks)
+    df.to_csv(data_path, sep='\t', index=None, header=list(df2))
+
+    print("Program has successfully written rank lists at " + data_path + ".")
+    ranks_handle.close()
+
+
 def remove_temp_files(promoter_seq, promoter_ids, results_txt):
+    """ Removes all temp files."""
+
     subprocess.run(['rm', promoter_seq])
     subprocess.run(['rm', promoter_ids])
     subprocess.run(['rm', results_txt])
-
-
-def get_binding_score(fasta_file, features_ids, deepbind_path, p, max_seq_len):
-    promoter_seq = "promoter.seq"
-    promoter_ids = "promoter.ids"
-    results_txt = "results.txt"
-
-    num_of_seq_and_leq(fasta_file, max_seq_len)
-    get_seq_and_id(fasta_file, promoter_seq, promoter_ids, max_seq_len)
-    print("This might take a while...")
-    deep_bind_exec_parallel(features_ids, promoter_seq, results_txt, deepbind_path, p)
-    return promoter_seq, promoter_ids, results_txt
 
 
 def main():
@@ -128,7 +159,8 @@ def main():
 
     p = mp.Pool(num_cpu)
     promoter_seq, promoter_ids, results_txt = get_binding_score(fasta_file, features_ids, deepbind_path, p, max_seq_len)
-    create_ranked_records(promoter_ids, results_txt, final_results_file)
+    write_scores(promoter_ids, results_txt, final_results_file)
+    write_ranked_scores(results_txt, promoter_ids, final_results_file)
     remove_temp_files(promoter_seq, promoter_ids, results_txt)
 
     end = time.time() - start

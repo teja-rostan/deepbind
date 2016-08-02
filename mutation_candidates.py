@@ -80,8 +80,7 @@ def get_score_changes(mutations_file, features_ids, deepbind_path, p, original_s
 
     ss.deep_bind_exec_parallel(features_ids, mutations_file, results_txt, deepbind_path, p)
 
-    mutated_scores_df = pd.read_csv(results_txt, delimiter="\t")
-    mutated_scores = mutated_scores_df.as_matrix()
+    mutated_scores = pd.read_csv(results_txt, delimiter="\t").as_matrix()
     mutated_scores = mutated_scores.reshape((4, int(mutated_scores.shape[0]/4)), order='F')
 
     score_changes = np.multiply((mutated_scores - original_score), np.maximum(0, original_score, mutated_scores))
@@ -187,7 +186,6 @@ def main():
 
         score_changes = get_score_changes_advanced(mutations, features_ids, deepbind_path, p, original_score,
                                                    results_txt, subseqs_file, motif_len)
-
         ranked_scores = get_ranked_scores(ranked_scores, score_changes)
         write_score_changes(score_changes, final_results_file, sequence_id)
 
