@@ -7,7 +7,7 @@ import sys
 import time
 
 help = \
-"""
+    """
     Score DNA/RNA sequences stored in FASTA format (fasta_path) according to any RBP/TF
     model (features_path) listed in the DeepBind web repository:
     http://tools.genes.toronto.edu/deepbind
@@ -64,10 +64,9 @@ def join_results(result_paths, results_txt):
     results.to_csv(results_txt, sep='\t', index=None)
 
 
-def deep_bind_exec_parallel(features_ids, promoter_seq, results_txt, deepbind_path, num_cpu):
-    p = mp.Pool(num_cpu)
+def deep_bind_exec_parallel(features_ids, promoter_seq, results_txt, deepbind_path, p):
     result_paths = []
-    feature_list =[]
+    feature_list = []
     promoter_seq_list = []
     deepbind_paths = []
     features = open(features_ids, "r")
@@ -77,7 +76,6 @@ def deep_bind_exec_parallel(features_ids, promoter_seq, results_txt, deepbind_pa
         promoter_seq_list.append(promoter_seq)
         deepbind_paths.append(deepbind_path)
     zipped = zip(feature_list, promoter_seq_list, result_paths, deepbind_paths)
-    print("This might take a while...")
     p.starmap(deep_bind_exec, zipped)
     join_results(result_paths, results_txt)
 
@@ -96,14 +94,15 @@ def remove_temp_files(promoter_seq, promoter_ids, results_txt):
     subprocess.run(['rm', results_txt])
 
 
-def get_binding_score(fasta_file, features_ids, deepbind_path, num_cpu, max_seq_len):
+def get_binding_score(fasta_file, features_ids, deepbind_path, p, max_seq_len):
     promoter_seq = "promoter.seq"
     promoter_ids = "promoter.ids"
     results_txt = "results.txt"
 
-    # num_of_seq_and_leq(fasta_data, max_seq_len)
+    num_of_seq_and_leq(fasta_file, max_seq_len)
     get_seq_and_id(fasta_file, promoter_seq, promoter_ids, max_seq_len)
-    deep_bind_exec_parallel(features_ids, promoter_seq, results_txt, deepbind_path, num_cpu)
+    print("This might take a while...")
+    deep_bind_exec_parallel(features_ids, promoter_seq, results_txt, deepbind_path, p)
     return promoter_seq, promoter_ids, results_txt
 
 
@@ -111,7 +110,7 @@ def main():
     start = time.time()
     arguments = sys.argv[1:]
     num_cpu = 4  # default value
-    max_seq_len = 500
+    max_seq_len = 1000
 
     if len(arguments) < 4:
         print("Not enough arguments stated! Usage: \n"
@@ -127,14 +126,15 @@ def main():
         num_cpu = int(arguments[4])
     print("Program running on " + str(num_cpu) + " CPU cores.")
 
-    promoter_seq, promoter_ids, results_txt = get_binding_score(fasta_file, features_ids, deepbind_path,
-                                                                num_cpu, max_seq_len)
+    p = mp.Pool(num_cpu)
+    promoter_seq, promoter_ids, results_txt = get_binding_score(fasta_file, features_ids, deepbind_path, p, max_seq_len)
     create_ranked_records(promoter_ids, results_txt, final_results_file)
     remove_temp_files(promoter_seq, promoter_ids, results_txt)
 
-    end = time.time()-start
+    end = time.time() - start
     print("Program has successfully written scores at " + final_results_file + ".")
     print("Program run for %.2f seconds." % end)
+
 
 if __name__ == '__main__':
     main()
