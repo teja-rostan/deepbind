@@ -24,8 +24,8 @@ where deepbind executable is in same dir.
 
 Gene ID converter. Files use different ID groups for the same sequence. Possible groups are DDB ID and DDB_G ID.
 The program supports conversion from DDB to DDB_G (conv_type=0) or from DDB_G to DDB (conv_type=1). 
-The program uses a file DDB-GeneID-UniPort.txt found in folder DDB_DDB_G for a reference. The file can be found 
-[here](http://dictybase.org/db/cgi-bin/dictyBase/download/download.pl?area=general&ID=DDB-GeneID-UniProt.txt).
+The program uses a file DDB-GeneID-UniPort.txt found in folder DDB_DDB_G for a reference. The file can be found at
+[dictybase.org](http://dictybase.org/db/cgi-bin/dictyBase/download/download.pl?area=general&ID=DDB-GeneID-UniProt.txt).
 
 ###### Usage:
 python map_columns.py <original_file> <column_name> <conversion_type> <converted_file> <delimiter>,
