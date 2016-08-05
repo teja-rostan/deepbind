@@ -15,7 +15,7 @@ help = \
     For scoring, the program uses deepbind executable (deepbind_path) that can be downloaded at:
     http://tools.genes.toronto.edu/deepbind/download.html
     Scores are written in a file (results_path). To speed up computation,
-    the program supports parallelization on multiple CPU cores (num_of_cpu).
+    the program supports parallelism on multiple CPU cores (num_of_cpu).
 
 
     Usage:
@@ -38,7 +38,7 @@ def num_of_seq_and_leq(fasta_file, threshold):
     print("Number of sequences less or equal " + str(threshold) + ":", less)
 
 
-def get_seq_and_id(fasta_file, sequence_path, id_path, threshold):
+def get_seq_and_id(fasta_file, promoter_seq, promoter_ids, threshold):
     """ Extracts raw sequence strings and ids to separate files."""
 
     sequences = []
@@ -46,11 +46,13 @@ def get_seq_and_id(fasta_file, sequence_path, id_path, threshold):
     for record in SeqIO.parse(fasta_file, "fasta"):
         if len(str(record.seq)) <= threshold:
             sequences.append(str(record.seq))
-            record_ids.append(str(record.id))
+            record_id = str(record.id)
+            end = record_id.find('|')
+            record_ids.append(record_id[:end])
     data_record_ids = pd.DataFrame({"record_id": record_ids})
     data_sequences = pd.DataFrame({"record_sequence": sequences})
-    data_record_ids.to_csv(id_path, index=False, header=False)
-    data_sequences.to_csv(sequence_path, index=False, header=False)
+    data_record_ids.to_csv(promoter_ids, index=False, header=False)
+    data_sequences.to_csv(promoter_seq, index=False, header=False)
 
 
 def deep_bind_exec(features_ids, promoter_seq, results_txt, deepbind_path):
@@ -62,7 +64,7 @@ def deep_bind_exec(features_ids, promoter_seq, results_txt, deepbind_path):
 
 
 def deep_bind_exec_parallel(features_ids, promoter_seq, results_txt, deepbind_path, p):
-    """ Executes the deepbind program in parallel with starmap. """
+    """ Executes the deepbind program in parallel with starmap. Calls join_results."""
 
     result_paths = []
     feature_list = []
@@ -79,13 +81,13 @@ def deep_bind_exec_parallel(features_ids, promoter_seq, results_txt, deepbind_pa
     join_results(result_paths, results_txt)
 
 
-def get_binding_score(fasta_file, features_ids, deepbind_path, p, max_seq_len):
+def get_binding_score(fasta_file, features_ids, deepbind_path, p, max_seq_len, final_results_file):
     """ Prepares and calls deep_bind_exec_parallel. """
 
-    promoter_seq = "promoter.seq"
-    promoter_ids = "promoter.ids"
-    results_txt = "results.txt"
-
+    data_dir, data_file = os.path.split(final_results_file)
+    promoter_seq = data_dir + "/promoter.seq"
+    promoter_ids = data_dir + "/promoter.ids"
+    results_txt = data_dir + "/results.txt"
     get_seq_and_id(fasta_file, promoter_seq, promoter_ids, max_seq_len)
     deep_bind_exec_parallel(features_ids, promoter_seq, results_txt, deepbind_path, p)
     return promoter_seq, promoter_ids, results_txt
@@ -109,7 +111,7 @@ def write_scores(promoter_ids, results_txt, final_results_file):
     df2 = pd.read_csv(results_txt, delimiter="\t")
     promoter_scores = pd.concat([df1, df2], axis=1)
     promoter_scores = promoter_scores.rename(columns={0: 'ID'})
-    promoter_scores.to_csv(final_results_file, sep='\t')
+    promoter_scores.to_csv(final_results_file, sep='\t', index=None)
 
 
 def write_ranked_scores(results_txt, promoter_ids, final_results_file):
@@ -119,14 +121,25 @@ def write_ranked_scores(results_txt, promoter_ids, final_results_file):
     df2 = pd.read_csv(results_txt, delimiter="\t")
     ranks = df1.as_matrix()[np.argsort(df2.as_matrix(), axis=0)[::-1]][:, :, 0]
     data_dir, data_file = os.path.split(final_results_file)
-    data_path = data_dir + "/ranked_list.csv"
+    data_path = data_dir + "/ranked_scores.csv"
     ranks_handle = open(data_path, "w")
-    print(ranks.shape)
     df = pd.DataFrame(data=ranks)
     df.to_csv(data_path, sep='\t', index=None, header=list(df2))
 
     print("Program has successfully written rank lists at " + data_path + ".")
     ranks_handle.close()
+
+
+def write_scores_modified(promoter_ids, results_txt, final_results_file, features_ids):
+    df1 = pd.read_csv(promoter_ids, header=None)
+    df2 = pd.read_csv(results_txt, delimiter="\t")
+    df3 = pd.read_csv(features_ids, header=None, delimiter=" ")
+    df2 = df2.transpose()
+    df2.reset_index(level=0, inplace=True)
+    df2['index'] = df3[1]
+    names = df1.as_matrix().T.tolist()[0]
+    names.insert(0, 'ID')
+    df2.to_csv(final_results_file, sep='\t', index=None, header=names)
 
 
 def remove_temp_files(promoter_seq, promoter_ids, results_txt):
@@ -158,8 +171,11 @@ def main():
     print("Program running on " + str(num_cpu) + " CPU cores.")
 
     p = mp.Pool(num_cpu)
-    promoter_seq, promoter_ids, results_txt = get_binding_score(fasta_file, features_ids, deepbind_path, p, max_seq_len)
+    num_of_seq_and_leq(fasta_file, max_seq_len)
+    promoter_seq, promoter_ids, results_txt = get_binding_score(fasta_file, features_ids, deepbind_path, p, max_seq_len,
+                                                                final_results_file)
     write_scores(promoter_ids, results_txt, final_results_file)
+    # write_scores_modified(promoter_ids, results_txt, final_results_file, features_ids)
     write_ranked_scores(results_txt, promoter_ids, final_results_file)
     remove_temp_files(promoter_seq, promoter_ids, results_txt)
 

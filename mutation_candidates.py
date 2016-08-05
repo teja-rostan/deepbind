@@ -9,6 +9,26 @@ import sys
 import os
 
 
+help = \
+    """
+    Score DNA/RNA sequences stored in FASTA format (fasta_path) according to any RBP/TF
+    model (features_path) listed in the DeepBind web repository:
+    http://tools.genes.toronto.edu/deepbind
+    For scoring, the program uses deepbind executable (deepbind_path) that can be downloaded at:
+    http://tools.genes.toronto.edu/deepbind/download.html
+    Scores are written in a file (results_path). To speed up computation,
+    the program supports parallelism on multiple CPU cores (num_of_cpu).
+
+
+    Usage:
+        "python mutation_candidates.py <fasta_path> <features_path> <deepbind_path> <results_path> <num_of_cpu=4>"
+              "<motif_len=10>, where <num_of_cpu=4> and <motif_len=10> are optional."
+
+    Example:
+        python mutation_candidates.py sequences.fasta feature.id deepbind/deepbind scores.csv
+"""
+
+
 def split_fasta_seqs(fasta_file):
     """ In the same directory where is found a fasta file, it creates a directory "all_sequences" with every fasta
     sequence in separate file."""
@@ -53,11 +73,11 @@ def make_mutated_seqs(fasta_file, mutations_file):
     return mutations
 
 
-def get_original_score(fasta_file, features_ids, deepbind_path, p, max_seq_len):
+def get_original_score(fasta_file, features_ids, deepbind_path, p, max_seq_len, final_results_file):
     """ Extracts and returns binding score of original sequence."""
 
-    promoter_seq, promoter_ids, results_txt = ss.get_binding_score(fasta_file, features_ids, deepbind_path,
-                                                                   p, max_seq_len)
+    promoter_seq, promoter_ids, results_txt = ss.get_binding_score(fasta_file, features_ids, deepbind_path, p,
+                                                                   max_seq_len, final_results_file)
     score_df = pd.read_csv(results_txt, delimiter="\t")
     id_df = pd.read_csv(promoter_ids, delimiter="\t")
     return score_df.iat[0, 0], list(id_df)[0], promoter_seq, promoter_ids
@@ -129,7 +149,7 @@ def write_ranked_list(ranked_scores, final_results_file, sequence_ids):
     "final_results_file."""
 
     data_dir, data_file = os.path.split(final_results_file)
-    data_path = data_dir + "/ranked_list.csv"
+    data_path = data_dir + "/ranked_mutations.csv"
     ranks_handle = open(data_path, "w")
     for i in range(len(ranked_scores)):
         ranks_handle.write(sequence_ids[i] + "\n" +
@@ -178,7 +198,8 @@ def main():
     sequence_paths, fasta_dir = split_fasta_seqs(fasta_file)
     for sequence_path in sequence_paths:
         original_score, sequence_id, promoter_seq, promoter_ids = get_original_score(sequence_path, features_ids,
-                                                                                     deepbind_path, p, max_seq_len)
+                                                                                     deepbind_path, p, max_seq_len,
+                                                                                     final_results_file)
         print("Original score of " + sequence_id + ":", original_score)
         sequence_ids.append(sequence_id)
 
