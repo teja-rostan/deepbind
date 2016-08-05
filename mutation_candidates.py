@@ -11,14 +11,9 @@ import os
 
 help = \
     """
-    Score DNA/RNA sequences stored in FASTA format (fasta_path) according to any RBP/TF
-    model (features_path) listed in the DeepBind web repository:
-    http://tools.genes.toronto.edu/deepbind
-    For scoring, the program uses deepbind executable (deepbind_path) that can be downloaded at:
-    http://tools.genes.toronto.edu/deepbind/download.html
-    Scores are written in a file (results_path). To speed up computation,
-    the program supports parallelism on multiple CPU cores (num_of_cpu).
-
+    Creates a mutation (sensitivity) map of sequences presented in fasta_path file. It uses binding_score.py for scoring
+    original sequence and its mutations. Mutation map is presented in
+    Alipanahi et al. 2015. The program creates another file of ranked mutations.
 
     Usage:
         "python mutation_candidates.py <fasta_path> <features_path> <deepbind_path> <results_path> <num_of_cpu=4>"

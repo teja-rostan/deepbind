@@ -21,7 +21,7 @@ help = \
 def get_column_to_change(old_file, column, delimiter):
     """ Extracts and returns the column of original_file by column_name."""
 
-    df = pd.read_csv(old_file, sep=delimiter)
+    df = pd.read_csv(old_file, sep=eval(delimiter))
     return df[column].as_matrix()
 
 
@@ -33,13 +33,13 @@ def convert_ids(old_ids, map_txt, conv_type):
     ddb_g_id = df['DDB_G ID'].as_matrix()
     new_ids = old_ids.copy()
     if conv_type == '0':
-        for i, id in enumerate(old_ids):
-            occurrence = list(np.where(ddb_id == id)[0])
+        for i, old_id in enumerate(old_ids):
+            occurrence = list(np.where(ddb_id == old_id)[0])
             if len(occurrence) > 0:
                 new_ids[i] = ddb_g_id[occurrence[0]]
     else:
-        for i, id in enumerate(old_ids):
-            occurrence = list(np.where(ddb_g_id == id)[0])
+        for i, old_id in enumerate(old_ids):
+            occurrence = list(np.where(ddb_g_id == old_id)[0])
             if len(occurrence) > 0:
                 new_ids[i] = ddb_id[occurrence[0]]
     return new_ids
@@ -48,10 +48,9 @@ def convert_ids(old_ids, map_txt, conv_type):
 def write_changed_file(new_ids, old_file, column, delimiter, new_file):
     """ Writes converted_file with converted column."""
 
-    df = pd.read_csv(old_file, sep=delimiter)
+    df = pd.read_csv(old_file, sep=eval(delimiter))
     df[column] = new_ids
-    print(delimiter)
-    df.to_csv(new_file, sep=delimiter)
+    df.to_csv(new_file, sep=eval(delimiter), index=None)
 
 
 def main():
@@ -66,12 +65,12 @@ def main():
               "where <delimiter> is optional (default is '\\t').")
         return
 
-    old_file = arguments[0]  # path to file we want to change
-    column = arguments[1]  # column name we want to change
-    conv_type = arguments[2]  # 0:ID->ID_G, 1:ID_G->ID
-    new_file = arguments[3]  # path to new/changed file
+    old_file = arguments[0]
+    column = arguments[1]
+    conv_type = arguments[2]
+    new_file = arguments[3]
     if len(arguments) > 4:
-        delimiter = arguments[4]  # delimiter of old_file, default = '\t
+        delimiter = arguments[4]
 
     old_ids = get_column_to_change(old_file, column, delimiter)
     new_ids = convert_ids(old_ids, map_txt, conv_type)
