@@ -154,7 +154,7 @@ def main():
     start = time.time()
     arguments = sys.argv[1:]
     num_cpu = 4  # default value
-    max_seq_len = 1000
+    max_seq_len = 600
 
     if len(arguments) < 4:
         print("Not enough arguments stated! Usage: \n"
@@ -176,7 +176,7 @@ def main():
                                                                 final_results_file)
     write_scores(promoter_ids, results_txt, final_results_file)
     # write_scores_modified(promoter_ids, results_txt, final_results_file, features_ids)
-    write_ranked_scores(results_txt, promoter_ids, final_results_file)
+    # write_ranked_scores(results_txt, promoter_ids, final_results_file)
     remove_temp_files(promoter_seq, promoter_ids, results_txt)
 
     end = time.time() - start

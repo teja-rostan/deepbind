@@ -2,11 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e39fe577-1de2-45d9-ae72-9b7e1c3e52e8" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/join_scores.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/binding_score.py" afterPath="$PROJECT_DIR$/binding_score.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/join_scores.py" afterPath="$PROJECT_DIR$/join_scores.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/map_columns.py" afterPath="$PROJECT_DIR$/map_columns.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mutation_candidates.py" afterPath="$PROJECT_DIR$/mutation_candidates.py" />
     </list>
     <ignored path="deepBind.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -30,8 +30,8 @@
       <file leaf-file-name="binding_score.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/binding_score.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1230">
-              <caret line="89" column="42" selection-start-line="89" selection-start-column="42" selection-end-line="89" selection-end-column="42" />
+            <state relative-caret-position="488">
+              <caret line="152" column="11" selection-start-line="152" selection-start-column="11" selection-end-line="152" selection-end-column="11" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
               </folding>
@@ -42,8 +42,8 @@
       <file leaf-file-name="map_columns.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/map_columns.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1020">
-              <caret line="71" column="26" selection-start-line="71" selection-start-column="26" selection-end-line="71" selection-end-column="26" />
+            <state relative-caret-position="863">
+              <caret line="70" column="36" selection-start-line="70" selection-start-column="36" selection-end-line="70" selection-end-column="36" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -54,8 +54,8 @@
       <file leaf-file-name="mutation_candidates.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mutation_candidates.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2400">
-              <caret line="168" column="47" selection-start-line="168" selection-start-column="47" selection-end-line="168" selection-end-column="47" />
+            <state relative-caret-position="1905">
+              <caret line="135" column="50" selection-start-line="135" selection-start-column="50" selection-end-line="135" selection-end-column="50" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
               </folding>
@@ -63,27 +63,27 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/README.md">
-          <provider selected="true" editor-type-id="MarkdownFxPreviewEditor">
-            <state />
-          </provider>
-          <provider editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+          <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
             <state split_layout="FIRST">
-              <first_editor relative-caret-position="405">
-                <caret line="27" column="114" selection-start-line="27" selection-start-column="114" selection-end-line="27" selection-end-column="114" />
+              <first_editor relative-caret-position="660">
+                <caret line="44" column="77" selection-start-line="44" selection-start-column="77" selection-end-line="44" selection-end-column="77" />
                 <folding />
               </first_editor>
               <second_editor />
             </state>
           </provider>
+          <provider editor-type-id="MarkdownFxPreviewEditor">
+            <state />
+          </provider>
         </entry>
       </file>
-      <file leaf-file-name="join_scores.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="join_scores.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/join_scores.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="22" column="90" selection-start-line="22" selection-start-column="90" selection-end-line="22" selection-end-column="90" />
+            <state relative-caret-position="491">
+              <caret line="46" column="0" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -124,17 +124,17 @@
         <option value="$PROJECT_DIR$/sequence_score.py" />
         <option value="$PROJECT_DIR$/goal1/promoter_scores.csv" />
         <option value="$PROJECT_DIR$/goal1/ranked_list.csv" />
-        <option value="$PROJECT_DIR$/binding_score.py" />
         <option value="$PROJECT_DIR$/mutation_candidates.py" />
-        <option value="$PROJECT_DIR$/map_columns.py" />
-        <option value="$PROJECT_DIR$/join_scores.py" />
         <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/map_columns.py" />
+        <option value="$PROJECT_DIR$/binding_score.py" />
+        <option value="$PROJECT_DIR$/join_scores.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1086" />
-    <option name="y" value="53" />
+    <option name="x" value="603" />
+    <option name="y" value="66" />
     <option name="width" value="1344" />
     <option name="height" value="1262" />
   </component>
@@ -182,7 +182,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -218,6 +217,7 @@
         </subPane>
       </pane>
       <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -238,7 +238,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="deepBind" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/binding_score.py" />
-      <option name="PARAMETERS" value="$USER_HOME$/deepbindProject/promoter_sequences/promoter_sequences_small.fasta $USER_HOME$/deepbindProject/transcriptionFactors/features.ids $USER_HOME$/deepbindProject/deepbind/deepbind $USER_HOME$/deepbindProject/results/scores/promoter_scores.csv" />
+      <option name="PARAMETERS" value="$USER_HOME$/deepbindProject/promoter_sequences/promoter_sequences_small.fasta $USER_HOME$/deepbindProject/transcriptionFactors/bzip.ids $USER_HOME$/deepbindProject/deepbind/deepbind $USER_HOME$/deepbindProject/results/binding_scores/promoter_scores.csv" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
     </configuration>
@@ -255,7 +255,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="deepBind" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/mutation_candidates.py" />
-      <option name="PARAMETERS" value="$USER_HOME$/deepbindProject/promoter_sequences/promoter_sequences_small.fasta $USER_HOME$/deepbindProject/transcriptionFactors/feature.id $USER_HOME$/deepbindProject/deepbind/deepbind $USER_HOME$/deepbindProject/results/mutations/mutations.csv" />
+      <option name="PARAMETERS" value="$USER_HOME$/deepbindProject/promoter_sequences/promoter_sequences_small.fasta $USER_HOME$/deepbindProject/transcriptionFactors/bZIP $USER_HOME$/deepbindProject/deepbind/deepbind $USER_HOME$/deepbindProject/results/mutations/mutations.csv" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
     </configuration>
@@ -272,7 +272,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="deepBind" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/map_columns.py" />
-      <option name="PARAMETERS" value="$USER_HOME$/deepbindProject/results/binding_scores/promoter_scores.csv ID 0 $USER_HOME$/deepbindProject/results/maps/new.csv" />
+      <option name="PARAMETERS" value="$USER_HOME$/deepbindProject/results/binding_scores/promoter_scores.csv ID 0 $USER_HOME$/deepbindProject/results/maps/new.csv '\t'" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
     </configuration>
@@ -289,7 +289,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="deepBind" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/join_scores.py" />
-      <option name="PARAMETERS" value="$USER_HOME$/deepbindProject/results/maps/new.csv $USER_HOME$/deepbindProject/dicty_expression/test.txt db_gene_id log2(AX4/bzpF-) $USER_HOME$/deepbindProject/results/joined_scores/both.csv '\t'" />
+      <option name="PARAMETERS" value="$USER_HOME$/deepbindProject/results/maps/new.csv $USER_HOME$/deepbindProject/dicty_expression/tf_bzpf.txt db_gene_id log2(AX4/bzpF-) $USER_HOME$/deepbindProject/results/joined_scores/both.csv '\t'" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
     </configuration>
@@ -437,8 +437,8 @@
       <list size="4">
         <item index="0" class="java.lang.String" itemvalue="Python.join_scores" />
         <item index="1" class="java.lang.String" itemvalue="Python.map_columns" />
-        <item index="2" class="java.lang.String" itemvalue="Python.mutation_candidates" />
-        <item index="3" class="java.lang.String" itemvalue="Python.binding_score" />
+        <item index="2" class="java.lang.String" itemvalue="Python.binding_score" />
+        <item index="3" class="java.lang.String" itemvalue="Python.mutation_candidates" />
       </list>
     </recent_temporary>
   </component>
@@ -459,7 +459,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1086" y="53" width="1344" height="1262" extended-state="0" />
+    <frame x="603" y="66" width="1344" height="1262" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20030235" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -467,18 +467,18 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32857144" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28010473" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39877835" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2809773" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32959184" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39877835" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="UnknownFeatures">
@@ -509,20 +509,7 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/mutation_candidates.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2400">
-          <caret line="168" column="47" selection-start-line="168" selection-start-column="47" selection-end-line="168" selection-end-column="47" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
-      <provider editor-type-id="MarkdownFxPreviewEditor">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
         <state split_layout="FIRST">
           <first_editor relative-caret-position="0">
@@ -531,6 +518,9 @@
           </first_editor>
           <second_editor />
         </state>
+      </provider>
+      <provider editor-type-id="MarkdownFxPreviewEditor">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/join_scores.py">
@@ -758,6 +748,24 @@
     <entry file="file://$PROJECT_DIR$/results.txt" />
     <entry file="file://$PROJECT_DIR$/goal1/promoter_scores.csv" />
     <entry file="file://$PROJECT_DIR$/goal1/ranked_list.csv" />
+    <entry file="file://$USER_HOME$/venv/lib/python3.5/site-packages/pandas-0.18.1-py3.5-macosx-10.6-x86_64.egg/pandas/io/parsers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4225">
+          <caret line="486" column="21" selection-start-line="486" selection-start-column="21" selection-end-line="486" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/result0.txt" />
+    <entry file="file://$PROJECT_DIR$/mutation_candidates.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1905">
+          <caret line="135" column="50" selection-start-line="135" selection-start-column="50" selection-end-line="135" selection-end-column="50" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/requirements.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
@@ -766,37 +774,40 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/venv/lib/python3.5/site-packages/pandas-0.18.1-py3.5-macosx-10.6-x86_64.egg/pandas/io/parsers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4225">
-          <caret line="486" column="21" selection-start-line="486" selection-start-column="21" selection-end-line="486" selection-end-column="22" />
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+        <state split_layout="FIRST">
+          <first_editor relative-caret-position="660">
+            <caret line="44" column="77" selection-start-line="44" selection-start-column="77" selection-end-line="44" selection-end-column="77" />
+            <folding />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+      <provider editor-type-id="MarkdownFxPreviewEditor">
+        <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/binding_score.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1230">
-          <caret line="89" column="42" selection-start-line="89" selection-start-column="42" selection-end-line="89" selection-end-column="42" />
+        <state relative-caret-position="488">
+          <caret line="152" column="11" selection-start-line="152" selection-start-column="11" selection-end-line="152" selection-end-column="11" />
           <folding>
             <element signature="e#0#21#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mutation_candidates.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2400">
-          <caret line="168" column="47" selection-start-line="168" selection-start-column="47" selection-end-line="168" selection-end-column="47" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/map_columns.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1020">
-          <caret line="71" column="26" selection-start-line="71" selection-start-column="26" selection-end-line="71" selection-end-column="26" />
+        <state relative-caret-position="863">
+          <caret line="70" column="36" selection-start-line="70" selection-start-column="36" selection-end-line="70" selection-end-column="36" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
@@ -805,31 +816,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/join_scores.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="22" column="90" selection-start-line="22" selection-start-column="90" selection-end-line="22" selection-end-column="90" />
+        <state relative-caret-position="491">
+          <caret line="46" column="0" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="MarkdownFxPreviewEditor">
-        <state />
-      </provider>
-      <provider editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
-        <state split_layout="FIRST">
-          <first_editor relative-caret-position="405">
-            <caret line="27" column="114" selection-start-line="27" selection-start-column="114" selection-end-line="27" selection-end-column="114" />
-            <folding />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>

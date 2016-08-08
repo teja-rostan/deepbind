@@ -10,8 +10,7 @@ help = \
     The program supports conversion from DDB to DDB_G (conv_type=0) or from DDB_G to DDB (conv_type=1).
 
     Usage:
-        "python map_columns.py <original_file> <column_name> <conversion_type> <converted_file> <delimiter>, "
-              "where <delimiter> is optional (default is '\\t')."
+        python map_columns.py <original_file> <column_name> <conversion_type> <converted_file> <delimiter>.
 
     Example:
         python map_columns.py original_file.csv ID 0 converted_file.csv
@@ -56,21 +55,18 @@ def write_changed_file(new_ids, old_file, column, delimiter, new_file):
 def main():
     start = time.time()
     map_txt = "DDB_DDB_G/DDB-GeneID-UniProt.txt"
-    delimiter = '\t'
     arguments = sys.argv[1:]
 
-    if len(arguments) < 4:
+    if len(arguments) < 5:
         print("Not enough arguments stated! Usage: \n"
-              "python map_columns.py <original_file> <column_name> <conversion_type> <converted_file> <delimiter>, "
-              "where <delimiter> is optional (default is '\\t').")
+              "python map_columns.py <original_file> <column_name> <conversion_type> <converted_file> <delimiter>")
         return
 
     old_file = arguments[0]
     column = arguments[1]
     conv_type = arguments[2]
     new_file = arguments[3]
-    if len(arguments) > 4:
-        delimiter = arguments[4]
+    delimiter = arguments[4]
 
     old_ids = get_column_to_change(old_file, column, delimiter)
     new_ids = convert_ids(old_ids, map_txt, conv_type)
