@@ -20,7 +20,7 @@ help = \
 def get_column_to_change(old_file, column, delimiter):
     """ Extracts and returns the column of original_file by column_name."""
 
-    df = pd.read_csv(old_file, sep=eval(delimiter))
+    df = pd.read_csv(old_file, sep=delimiter)
     return df[column].as_matrix()
 
 
@@ -47,9 +47,9 @@ def convert_ids(old_ids, map_txt, conv_type):
 def write_changed_file(new_ids, old_file, column, delimiter, new_file):
     """ Writes converted_file with converted column."""
 
-    df = pd.read_csv(old_file, sep=eval(delimiter))
+    df = pd.read_csv(old_file, sep=delimiter)
     df[column] = new_ids
-    df.to_csv(new_file, sep=eval(delimiter), index=None)
+    df.to_csv(new_file, sep=delimiter, index=None)
 
 
 def main():

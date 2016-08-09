@@ -61,6 +61,8 @@ def deep_bind_exec(features_ids, promoter_seq, results_txt, deepbind_path):
     promoter_seq_file = open(promoter_seq, "r")
     results_file = open(results_txt, "w")
     subprocess.run([deepbind_path, features_ids], stdin=promoter_seq_file, stdout=results_file)
+    promoter_seq_file.close()
+    results_file.close()
 
 
 def deep_bind_exec_parallel(features_ids, promoter_seq, results_txt, deepbind_path, p):
@@ -76,6 +78,7 @@ def deep_bind_exec_parallel(features_ids, promoter_seq, results_txt, deepbind_pa
         feature_list.append(feature)
         promoter_seq_list.append(promoter_seq)
         deepbind_paths.append(deepbind_path)
+    features.close()
     zipped = zip(feature_list, promoter_seq_list, result_paths, deepbind_paths)
     p.starmap(deep_bind_exec, zipped)
     join_results(result_paths, results_txt)
@@ -115,7 +118,7 @@ def write_scores(promoter_ids, results_txt, final_results_file):
 
 
 def write_ranked_scores(results_txt, promoter_ids, final_results_file):
-    """ Computes ranks of biggest scores for every feature (TF)."""
+    """ Computes and writes ranks of biggest scores for every feature (TF)."""
 
     df1 = pd.read_csv(promoter_ids, header=None)
     df2 = pd.read_csv(results_txt, delimiter="\t")
@@ -125,12 +128,13 @@ def write_ranked_scores(results_txt, promoter_ids, final_results_file):
     ranks_handle = open(data_path, "w")
     df = pd.DataFrame(data=ranks)
     df.to_csv(data_path, sep='\t', index=None, header=list(df2))
-
     print("Program has successfully written rank lists at " + data_path + ".")
     ranks_handle.close()
 
 
 def write_scores_modified(promoter_ids, results_txt, final_results_file, features_ids):
+    """ Writes bindings scores and sequence ids transposed to "final_results_file"."""
+
     df1 = pd.read_csv(promoter_ids, header=None)
     df2 = pd.read_csv(results_txt, delimiter="\t")
     df3 = pd.read_csv(features_ids, header=None, delimiter=" ")

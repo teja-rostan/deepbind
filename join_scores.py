@@ -21,7 +21,7 @@ help = \
 
 
 def get_expression_scores(expression_file, column_id_name, column_scores_name, delimiter):
-    df = pd.read_csv(expression_file, sep=eval(delimiter))
+    df = pd.read_csv(expression_file, sep=delimiter)
     return df[column_scores_name].as_matrix(), df[column_id_name].as_matrix()
 
 
