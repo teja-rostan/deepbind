@@ -3,7 +3,12 @@
     <words>
       <w>conv</w>
       <w>ddbddb</w>
+      <w>nnet</w>
+      <w>overfitting</w>
+      <w>preprocessing</w>
       <w>prot</w>
+      <w>rmse</w>
+      <w>softmax</w>
     </words>
   </dictionary>
 </component>

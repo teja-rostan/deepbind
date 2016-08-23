@@ -44,11 +44,12 @@ def get_seq_and_id(fasta_file, promoter_seq, promoter_ids, threshold):
     sequences = []
     record_ids = []
     for record in SeqIO.parse(fasta_file, "fasta"):
-        if len(str(record.seq)) <= threshold:
-            sequences.append(str(record.seq))
-            record_id = str(record.id)
-            end = record_id.find('|')
-            record_ids.append(record_id[:end])
+        sequences.append(str(record.seq)[-threshold:])
+        record_id = str(record.id)
+        end = record_id.find('|')
+        if end != -1:
+            record_id = record_id[:end]
+        record_ids.append(record_id)
     data_record_ids = pd.DataFrame({"record_id": record_ids})
     data_sequences = pd.DataFrame({"record_sequence": sequences})
     data_record_ids.to_csv(promoter_ids, index=False, header=False)
@@ -158,7 +159,7 @@ def main():
     start = time.time()
     arguments = sys.argv[1:]
     num_cpu = 4  # default value
-    max_seq_len = 600
+    max_seq_len = 900
 
     if len(arguments) < 4:
         print("Not enough arguments stated! Usage: \n"

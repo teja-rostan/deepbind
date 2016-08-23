@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import time
 import sys
+import os
 
 
 help = \
@@ -20,7 +21,7 @@ help = \
 def get_column_to_change(old_file, column, delimiter):
     """ Extracts and returns the column of original_file by column_name."""
 
-    df = pd.read_csv(old_file, sep=delimiter)
+    df = pd.read_csv(old_file, sep=eval(delimiter))
     return df[column].as_matrix()
 
 
@@ -44,19 +45,28 @@ def convert_ids(old_ids, map_txt, conv_type):
     return new_ids
 
 
-def write_changed_file(new_ids, old_file, column, delimiter, new_file):
+def write_changed_file(new_ids, old_file, column, delimiter, new_file, multiple):
     """ Writes converted_file with converted column."""
 
-    df = pd.read_csv(old_file, sep=delimiter)
-    df[column] = new_ids
-    df.to_csv(new_file, sep=delimiter, index=None)
+    if multiple:
+        data_dir, data_file = os.path.split(old_file)
+        first, second = data_file.split(".")
+        new_file = data_dir + "/" + first + "_G." + second
+        print(new_file)
+        df = pd.read_csv(old_file, sep=eval(delimiter))
+        df[column] = new_ids
+        df.to_csv(new_file, sep=eval(delimiter), index=None)
+    else:
+        df = pd.read_csv(old_file, sep=eval(delimiter))
+        df[column] = new_ids
+        df.to_csv(new_file, sep=eval(delimiter), index=None)
 
 
 def main():
     start = time.time()
     map_txt = "DDB_DDB_G/DDB-GeneID-UniProt.txt"
     arguments = sys.argv[1:]
-
+    multiple = False
     if len(arguments) < 5:
         print("Not enough arguments stated! Usage: \n"
               "python map_columns.py <original_file> <column_name> <conversion_type> <converted_file> <delimiter>")
@@ -68,9 +78,22 @@ def main():
     new_file = arguments[3]
     delimiter = arguments[4]
 
-    old_ids = get_column_to_change(old_file, column, delimiter)
-    new_ids = convert_ids(old_ids, map_txt, conv_type)
-    write_changed_file(new_ids, old_file, column, delimiter, new_file)
+    if len(arguments) > 4:
+        multiple = True
+
+    if multiple:
+        file = open(old_file, "r")
+        data_dir, _ = os.path.split(old_file)
+        for row in file:
+            new_old_file = data_dir + "/" + row[:-1]
+            print(new_old_file)
+            old_ids = get_column_to_change(new_old_file, column, delimiter)
+            new_ids = convert_ids(old_ids, map_txt, conv_type)
+            write_changed_file(new_ids, new_old_file, column, delimiter, new_file, multiple)
+    else:
+        old_ids = get_column_to_change(old_file, column, delimiter)
+        new_ids = convert_ids(old_ids, map_txt, conv_type)
+        write_changed_file(new_ids, old_file, column, delimiter, new_file, multiple)
 
     end = time.time() - start
     print("Program has successfully written mapped file at " + new_file + ".")

@@ -28,11 +28,11 @@ The program uses a file DDB-GeneID-UniPort.txt found in folder DDB_DDB_G for a r
 [dictybase.org](http://dictybase.org/db/cgi-bin/dictyBase/download/download.pl?area=general&ID=DDB-GeneID-UniProt.txt).
 
 ###### Usage:
-_python map_columns.py original_file column_name conversion_type converted_file delimiter_,
-where _delimiter_ is optional (default is '\\t').
+_python map_columns.py original_file column_name conversion_type converted_file delimiter_.
 
 ###### Example:
 _python map_columns.py original_file.csv ID 0 converted_file.csv_
+
 ### join_scores.py
 
 The program joins scores of two files: _binding_score_file_ (binding scores of sequences (with ID name) on features,
@@ -42,7 +42,7 @@ expression score.
 
 ###### Usage:
 _python join_scores.py binding_score_file expression_score_file column_ID_name column_score_name
-new_joined_file delimiter_, where _delimiter_ is optional (default is '\\t').
+new_joined_file delimiter_.
 
 ###### Example:
 _python join_scores.py binding_score_file.csv expression_score_file.txt gene_ID exp_score new_joined_file.csv_
@@ -61,4 +61,4 @@ motif_len=10_, where _num_of_cpu=4_ and _motif_len=10_ are optional.
 _python mutation_candidates.py sequences.fasta feature.id deepbind/deepbind scores.csv_
 
 ## Requirements    
-Requrements for this repository are found in _requirements.txt_.
+Requirements for this repository are found in _requirements.txt_.
