@@ -70,8 +70,12 @@ def write_joined_file_multiple(binding_file, new_exp_scores, new_file, bad, col_
     df = pd.read_csv(binding_file, sep='\t')
     df = df.drop(df.index[bad])
     df = df.reset_index()
-    df2 = pd.DataFrame(data=new_exp_scores, columns=col_names)
+    df = df.drop('index', axis=1)
+    df2 = pd.DataFrame(data=np.around(np.asarray(new_exp_scores).astype(float), decimals=2), columns=col_names)
+    df = df.round(decimals=2)
+    df2 = df2.round(decimals=2)
     results = pd.concat([df, df2], axis=1)
+    results = results.round(decimals=2)
     results.to_csv(new_file, sep="\t", index=None)
 
 
@@ -92,7 +96,7 @@ def main():
     if len(arguments) < 6:
         print("Not enough arguments stated! Usage: \n"
               "python join_scores.py <binding_score_file> <expression_score_file> <column_ID_name> <column_score_name> "
-              "<new_joined_file> <delimiter>")
+              "<new_joined_file> <delimiter> <multiple>")
         return
 
     binding_file = arguments[0]

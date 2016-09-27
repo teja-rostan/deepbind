@@ -28,6 +28,11 @@ def softmax(X):
     return e_x / e_x.sum(axis=1).dimshuffle(0, 'x')
 
 
+def sigmoid(X):
+    e_x = T.exp(X - X.max(axis=1).dimshuffle(0, 'x'))
+    return 1 / (1 + e_x)
+
+
 def RMSprop(cost, params, lr=0.001, rho=0.9, epsilon=1e-6):
     grads = T.grad(cost=cost, wrt=params)
     updates = []
@@ -49,7 +54,11 @@ def dropout(X, p=0.):
     return X
 
 
-def model3(X, w_h, w_h2, w_h3, w_o, p_drop_input, p_drop_hidden):
+def relative_entropy(noise_py_x, Y, W):
+    return -T.sum((Y * T.log(noise_py_x) + (1 - Y) * T.log(1 - noise_py_x)) * W, axis=noise_py_x.ndim - 1)
+
+
+def model_sig(X, w_h, w_h2, w_o, p_drop_input, p_drop_hidden):
     X = dropout(X, p_drop_input)
     h = rectify(T.dot(X, w_h))
 
@@ -57,10 +66,7 @@ def model3(X, w_h, w_h2, w_h3, w_o, p_drop_input, p_drop_hidden):
     h2 = rectify(T.dot(h, w_h2))
 
     h2 = dropout(h2, p_drop_hidden)
-    h3 = rectify(T.dot(h2, w_h3))
-
-    h3 = dropout(h3, p_drop_hidden)
-    py_x = softmax(T.dot(h3, w_o))
+    py_x = sigmoid(T.dot(h2, w_o))
     return py_x
 
 

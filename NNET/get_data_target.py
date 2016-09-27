@@ -6,28 +6,29 @@ from scipy.stats import scoreatpercentile
 from sklearn.preprocessing import OneHotEncoder
 
 
-def one_hot_decoder_prediction(y):
-    """ Computing argmax for every feature trinity."""
-
-    new_y = np.zeros(y.shape)
-    for i in range(int(y.shape[1] / 3)):
-        col = y[:, i * 3:i * 3 + 3]
-        col_max = np.argmax(col, axis=1)
-        col = np.zeros(col.shape)
-        col[range(len(col_max)), col_max] = 1
-        new_y[:, i * 3:i * 3 + 3] = col
-    return new_y
+# def one_hot_decoder_prediction(y):
+#     """ Computing argmax for every feature trinity."""
+#
+#     new_y = np.zeros(y.shape)
+#     for i in range(int(y.shape[1] / 3)):
+#         col = y[:, i * 3:i * 3 + 3]
+#         col_max = np.argmax(col, axis=1)
+#         col = np.zeros(col.shape)
+#         col[range(len(col_max)), col_max] = 1
+#         new_y[:, i * 3:i * 3 + 3] = col
+#     return new_y
 
 
 def one_hot_encoder_target(y):
     """ one hot encoding of all target variables"""
 
-    new_y = np.zeros((y.shape[0], y.shape[1] * 3))
+    k = 3
+    new_y = np.zeros((y.shape[0], y.shape[1] * k))
     for i in range(y.shape[1]):
         col = y[:, i]
         enc = OneHotEncoder(sparse=False)
-        trinity = enc.fit_transform(col.reshape(-1, 1))
-        new_y[:, i * 3:i * 3 + 3] = trinity
+        one_hot = enc.fit_transform(col.reshape(-1, 1))
+        new_y[:, i * k:i * k + k] = one_hot
     return new_y
 
 
@@ -45,7 +46,26 @@ def classification(target):
     return new_target
 
 
-def get_original_data(scores_file, delimiter, target_size, is_classification):
+def ordinal(target):
+    """ change to ordinal problem """
+
+    # low  00
+    # none 10
+    # high 11
+    k = 2  # k neurons per feature
+    new_target = np.zeros((target.shape[0], target.shape[1] * k))
+    for i in np.arange(0, new_target.shape[1], step=k):
+        expression = target[:, int(i/2)]
+        down_10 = np.percentile(expression, 10)
+        up_10 = np.percentile(expression, 90)
+        new_expression = np.ones((expression.shape[0], k))
+        new_expression[:, 0] -= (expression <= down_10)
+        new_expression[:, 1] -= (expression < up_10)
+        new_target[:, i:i+k] = new_expression
+    return new_target
+
+
+def get_original_data(scores_file, delimiter, target_size, nn_type):
     """Reads a complete file, splits to data and target, preprocessing... """
 
     """ get data """
@@ -55,23 +75,29 @@ def get_original_data(scores_file, delimiter, target_size, is_classification):
     """ split data and target """
     data = input_matrix[:, :-target_size]
     target = input_matrix[:, -target_size:]
-
+    raw_expressions = np.copy(target)
+    target_class = classification(target)
     """ classification or regression"""
-    if is_classification:
-        target = classification(target)
-
+    if nn_type == "class":
         """ one hot encoding of classes """
-        target = one_hot_encoder_target(target)
+        target = one_hot_encoder_target(target_class)
+    elif nn_type == "ord":
+        target = ordinal(target)
 
-    """ feature values reduction """
-    # for i in range(data.shape[1]):
-    #     feature = data[:, i]
-    #     s1 = scoreatpercentile(feature, 5)
-    #     s2 = scoreatpercentile(feature, 95)
-    #     cool = np.add((feature > s2).astype(int), (feature < s1).astype(int))
-    #     feature = np.multiply(feature, cool)
-    #     data[:, i] = feature
-    return data, target
+    return data, target, raw_expressions, target_class
+
+
+def get_ids(scores_file, delimiter, id_name):
+    df = pd.read_csv(scores_file, sep=delimiter)
+    return df[id_name].as_matrix()
+
+
+def get_cols(scores_file, delimiter, target_size):
+    df = pd.read_csv(scores_file, sep=delimiter)
+    col_names = list(df)[-target_size:]
+    col_names1 = [x for pair in zip(col_names, col_names) for x in pair]
+    col_names1 = list(col_names1[i] + '_' + str(i % 2) for i in range(len(col_names1)))
+    return col_names1 + col_names
 
 
 def main():
@@ -86,8 +112,9 @@ def main():
     scores_file = arguments[0]
     delimiter = arguments[1]
     target_size = int(arguments[2])
+    nn_type = arguments[3]
 
-    data, target = get_original_data(scores_file, delimiter, target_size)
+    data, target, raw_expressions = get_original_data(scores_file, delimiter, target_size, nn_type)
 
     end = time.time() - start
     print("Program run for %.2f seconds." % end)

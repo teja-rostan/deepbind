@@ -7,6 +7,8 @@ import pandas as pd
 
 from NNET import nnet_class
 from NNET import nnet_reg
+from NNET import nnet_ord
+from NNET import get_data_target
 
 help = \
     """
@@ -41,10 +43,15 @@ def main():
     col_names = []
     index_names = []
 
-    list_file = open(scores_list, "r")
     data_dir, _ = os.path.split(scores_list)
+    data_dir_nn, data_file = os.path.split(nn_scores_file)
 
-    for row in list_file:
+    list_file = open(scores_list, "r")
+    rows = list_file.readlines()
+    list_file.close()
+
+    cols = get_data_target.get_cols(data_dir + "/" + rows[0][:-1], delimiter, target_size)
+    for row in rows:
         scores_file = data_dir + "/" + row[:-1]
         df = pd.read_csv(scores_file, sep=delimiter)
         index_names = list(np.array(list(df))[-target_size:])
@@ -52,18 +59,31 @@ def main():
         print(scores_file)
 
         if learning_type == "class":
-            all_mc, all_nn = nnet_class.learn_and_score(scores_file, delimiter, target_size)
+            all_mc, all_nn, probs, ids = nnet_class.learn_and_score(scores_file, delimiter, target_size)
             nn_scores.append(all_nn)
+
         elif learning_type == "reg":
             all_mc, all_nn = nnet_reg.learn_and_score(scores_file, delimiter, target_size)
             nn_scores.append(all_nn)
+
+        elif learning_type == "ord":
+            probs, ids, spear = nnet_ord.learn_and_score(scores_file, delimiter, target_size)
+            nn_probs_file = data_dir_nn + "/prob" + row[8:11] + "_" + data_file
+            nn_spear_file = data_dir_nn + "/spearman" + row[8:11] + "_" + data_file
+
+            print(nn_spear_file)
+            df = pd.DataFrame(data=probs, index=ids, columns=cols)
+            df.to_csv(nn_probs_file, sep=delimiter)
+            df = pd.DataFrame(data=spear, columns=['rho_0', 'p-value_0', 'rho_1', 'p-value_1'], index=cols[-target_size:])
+            df.to_csv(nn_spear_file, sep=delimiter)
+
         else:
             print("Error: learning_type unknown! Usage: \n"
                   "python nnet_score.py <input_path> <output_path> <learning_type> <delimiter> <target_size>,\n"
                   "where learning_type=class or learning_type=reg")
 
-    df = pd.DataFrame(data=np.array(nn_scores).T, columns=col_names, index=index_names)
-    df.to_csv(nn_scores_file, sep=delimiter)
+    # df = pd.DataFrame(data=np.array(nn_scores).T, columns=col_names, index=index_names)
+    # df.to_csv(nn_scores_file, sep=delimiter)
 
     end = time.time() - start
     print("Program run for %.2f seconds." % end)

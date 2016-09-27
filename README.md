@@ -61,4 +61,4 @@ motif_len=10_, where _num_of_cpu=4_ and _motif_len=10_ are optional.
 _python mutation_candidates.py sequences.fasta feature.id deepbind/deepbind scores.csv_
 
 ## Requirements    
-Requirements for this repository are found in _requirements.txt_.
+Requirements for this repository can be found in _requirements.txt_.

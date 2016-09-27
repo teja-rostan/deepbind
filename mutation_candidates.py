@@ -159,6 +159,7 @@ def main():
     First it computes the score of original sequence. Creates all possible point mutations (SNP). Computes score of
     every mutated sequence. Computes the final sensitivity from original score and all scores of mutated sequences.
     The program can handle long sequences and/or multiple binding sites."""
+
     start = time.time()
     arguments = sys.argv[1:]
     num_cpu = 4  # default value

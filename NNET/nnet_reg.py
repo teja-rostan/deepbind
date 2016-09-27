@@ -10,7 +10,7 @@ from NNET import nnet
 from NNET import get_data_target
 
 
-def rmse_score(y_true, y_predicted):
+def rmse_score(y_predicted, y_true):
     """ Computes root mean squared error on every target variable separately. """
 
     results = []
@@ -34,7 +34,7 @@ def learn_and_score(scores_file, delimiter, target_size):
     """Learning and scoring input data with Neural Network (and Mean Learner for reference). """
 
     """ Get data and target tables. """
-    data, target = get_data_target.get_original_data(scores_file, delimiter, target_size, False)
+    data, target = get_data_target.get_original_data(scores_file, delimiter, target_size, "reg")
 
     """ Neural network architecture initialisation. """
     n_hidden = int(max(data.shape[1], target.shape[1]) * 2 / 3)
@@ -78,7 +78,7 @@ def learn_and_score(scores_file, delimiter, target_size):
             trX = trX[shuffle]
             for start, end in zip(range(0, len(trX), 128), range(128, len(trX), 128)):
                 cost = train(trX[start:end], trY[start:end])
-        prY = get_data_target.one_hot_decoder_prediction(predict(teX))
+        prY = predict(teX)
 
         """ Scoring... """
         md_score = mean_score(trY, teY)
