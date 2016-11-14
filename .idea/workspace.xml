@@ -2,27 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e39fe577-1de2-45d9-ae72-9b7e1c3e52e8" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/NNET/NnetClassLearner.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/NNET/NnetRegLearner.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/NNET/nnet_class_one.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/NNET/nnet_reg_one.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/outliers.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/plot_correlations.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/DEEPBIND/README.md" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/binding_score.py" afterPath="$PROJECT_DIR$/DEEPBIND/binding_score.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/join_exps.py" afterPath="$PROJECT_DIR$/DEEPBIND/join_exps.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/join_scores.py" afterPath="$PROJECT_DIR$/DEEPBIND/join_scores.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/map_columns.py" afterPath="$PROJECT_DIR$/DEEPBIND/map_columns.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mutation_candidates.py" afterPath="$PROJECT_DIR$/DEEPBIND/mutation_candidates.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/README.md" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/NNET/README.md" afterPath="$PROJECT_DIR$/NNET/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/NNET/get_data_target.py" afterPath="$PROJECT_DIR$/NNET/get_data_target.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/NNET/nnet.py" afterPath="$PROJECT_DIR$/NNET/nnet.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/NNET/nnet_class.py" afterPath="$PROJECT_DIR$/NNET/nnet_class.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/NNET/nnet_ord.py" afterPath="$PROJECT_DIR$/NNET/nnet_ord.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/NNET/nnet_reg.py" afterPath="$PROJECT_DIR$/NNET/nnet_reg.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nnet_score.py" afterPath="$PROJECT_DIR$/nnet_score.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/requirements.txt" afterPath="$PROJECT_DIR$/requirements.txt" />
     </list>
     <ignored path="deepBind.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -107,14 +88,46 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="NnetRegLearner.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="NnetRegLearner.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/NNET/NnetRegLearner.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+            <state relative-caret-position="450">
+              <caret line="30" column="25" selection-start-line="30" selection-start-column="25" selection-end-line="30" selection-end-column="25" />
               <folding>
                 <element signature="e#66#87#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/DEEPBIND/README.md">
+          <provider editor-type-id="MarkdownFxPreviewEditor">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+            <state split_layout="FIRST">
+              <first_editor relative-caret-position="0">
+                <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="10" />
+                <folding />
+              </first_editor>
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider editor-type-id="MarkdownFxPreviewEditor">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+            <state split_layout="FIRST">
+              <first_editor relative-caret-position="225">
+                <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+                <folding />
+              </first_editor>
+              <second_editor />
             </state>
           </provider>
         </entry>
@@ -152,7 +165,6 @@
         <option value="$PROJECT_DIR$/nnet_reg.py" />
         <option value="$PROJECT_DIR$/NNET/nnet_score.py" />
         <option value="$PROJECT_DIR$/mutation_candidates.py" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/map_columns.py" />
         <option value="$PROJECT_DIR$/join_scores.py" />
         <option value="$PROJECT_DIR$/join_exps.py" />
@@ -179,6 +191,7 @@
         <option value="$PROJECT_DIR$/outliers.py" />
         <option value="$PROJECT_DIR$/NNET/README.md" />
         <option value="$PROJECT_DIR$/NNET/nnet_reg_one.py" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -618,16 +631,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/DEEPBIND/binding_score.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#21#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/promoter_ids.csv" />
     <entry file="file://$PROJECT_DIR$/features.ids" />
     <entry file="file://$PROJECT_DIR$/blah.txt" />
@@ -855,26 +858,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/DEEPBIND/README.md">
-      <provider editor-type-id="MarkdownFxPreviewEditor">
-        <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
-        <state split_layout="FIRST">
-          <first_editor relative-caret-position="300">
-            <caret line="20" column="42" selection-start-line="20" selection-start-column="42" selection-end-line="20" selection-end-column="42" />
-            <folding />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/plot_correlations.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
@@ -941,11 +924,45 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/NNET/NnetRegLearner.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+        <state relative-caret-position="450">
+          <caret line="30" column="25" selection-start-line="30" selection-start-column="25" selection-end-line="30" selection-end-column="25" />
           <folding>
             <element signature="e#66#87#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DEEPBIND/README.md">
+      <provider editor-type-id="MarkdownFxPreviewEditor">
+        <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+        <state split_layout="FIRST">
+          <first_editor relative-caret-position="0">
+            <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="10" />
+            <folding />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider editor-type-id="MarkdownFxPreviewEditor">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+        <state split_layout="FIRST">
+          <first_editor relative-caret-position="225">
+            <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+            <folding />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>
