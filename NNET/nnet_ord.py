@@ -69,7 +69,7 @@ def learn_and_score(scores_file, delimiter, target_size):
     py_x = nnet.model_sig(X, w_h, w_h2, w_o, 0., 0.)
 
     # cost = T.mean(T.nnet.categorical_crossentropy(noise_py_x, Y))
-    cost = T.mean(nnet.relative_entropy(noise_py_x, Y, W))
+    cost = T.mean(nnet.weighted_entropy(noise_py_x, Y, W))
 
     # params = [w_h, w_h2, w_h3, w_o]
     params = [w_h, w_h2, w_o]

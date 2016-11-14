@@ -1,13 +1,14 @@
-import binding_score as ss
-from Bio import SeqIO
-import pandas as pd
-import numpy as np
-import subprocess
 import multiprocessing as mp
-import time
+import subprocess
 import sys
-import os
+import time
 
+import numpy as np
+import os
+import pandas as pd
+from Bio import SeqIO
+
+from DEEPBIND import binding_score as ss
 
 help = \
     """

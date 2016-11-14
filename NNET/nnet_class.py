@@ -9,6 +9,7 @@ from theano import tensor as T
 
 from NNET import nnet
 from NNET import get_data_target
+from NNET import NnetClassLearner
 
 
 def score_ca_and_prob(y_predicted, y_true):
@@ -38,11 +39,11 @@ def score_ca_and_prob(y_predicted, y_true):
 
 def majority(tr_y, te_y):
     """ Classification accuracy of majority classifier. """
-
+    k = 3
     mc = []
-    for i in range(int(tr_y.shape[1] / 3)):
-        col_train = tr_y[:, i * 3:i * 3 + 3]
-        col_test = te_y[:, i * 3:i * 3 + 3]
+    for i in range(int(tr_y.shape[1] / k)):
+        col_train = tr_y[:, i * k:i * k + k]
+        col_test = te_y[:, i * k:i * k + k]
 
         col_train = np.argmax(col_train, axis=1)
         col_test = np.argmax(col_test, axis=1)
@@ -61,29 +62,10 @@ def learn_and_score(scores_file, delimiter, target_size):
     data, target = get_data_target.get_original_data(scores_file, delimiter, target_size, "class")
 
     """ Neural network architecture initialisation. """
-    n_hidden = int(max(data.shape[1], target.shape[1]) * 2 / 3)
-    # n_hidden = 20
-
-    X = T.fmatrix()
-    Y = T.fmatrix()
-
-    w_h = nnet.init_weights((data.shape[1], n_hidden))
-    w_h2 = nnet.init_weights((n_hidden, n_hidden))
-    # w_h3 = nnet.init_weights((n_hidden, n_hidden))
-    w_o = nnet.init_weights((n_hidden, target.shape[1]))
-
-    # noise_py_x = nnet.model3(X, w_h, w_h2, w_h3, w_o, 0.2, 0.5)
-    # py_x = nnet.model3(X, w_h, w_h2, w_h3, w_o, 0., 0.)
-    noise_py_x = nnet.model2(X, w_h, w_h2, w_o, 0.2, 0.5)
-    py_x = nnet.model2(X, w_h, w_h2, w_o, 0., 0.)
-
-    cost = T.mean(T.nnet.categorical_crossentropy(noise_py_x, Y))
-    # params = [w_h, w_h2, w_h3, w_o]
-    params = [w_h, w_h2, w_o]
-    updates = nnet.RMSprop(cost, params, lr=0.001)
-
-    train = theano.function(inputs=[X, Y], outputs=cost, updates=updates, allow_input_downcast=True)
-    predict = theano.function(inputs=[X], outputs=py_x, allow_input_downcast=True)
+    n_hidden_n = int(max(data.shape[1], target.shape[1]) * 2 / 3)
+    n_hidden_l = 2
+    class_size = target_size * 3
+    net = NnetClassLearner.NnetClass(data.shape[1], class_size, n_hidden_l, n_hidden_n)
 
     """ Split to train and test 10-fold Cross-Validation """
     all_MC = []
@@ -101,31 +83,17 @@ def learn_and_score(scores_file, delimiter, target_size):
         prob_ids.extend(id[test_index])
         # print(trX.shape, trY.shape, teX.shape, teY.shape)
 
-        """ Learning... """
-        for i in range(100):
-            shuffle = np.random.permutation(len(trY))
-            trY = trY[shuffle]
-            trX = trX[shuffle]
-            for start, end in zip(range(0, len(trX), 128), range(128, len(trX), 128)):
-                cost = train(trX[start:end], trY[start:end])
-        predictions = predict(teX)
-        # prY = get_data_target.one_hot_decoder_prediction(predictions)
+        net.fit(trX, trY)
+        prY = net.predict(teX)
 
         """ Scoring... """
         mc_score = majority(trY, teY)
-        nn_score, true_p, pred_p = score_ca_and_prob(predictions, teY)
+        nn_score, true_p, pred_p = score_ca_and_prob(prY, teY)
 
-        # print(probabilities.shape, true_p.shape, pred_p.shape, len(teY), probabilities[idx:len(teY), :target_size].shape)
         probabilities[idx:idx+len(teY), :target_size] = true_p
         probabilities[idx:idx+len(teY), target_size:] = pred_p
 
         idx += len(teY)
-
-        """ Randomizing weights for new fold (to overcome overfitting)."""
-        w_h.set_value(nnet.rand_weights((data.shape[1], n_hidden)))
-        w_h2.set_value(nnet.rand_weights((n_hidden, n_hidden)))
-        # w_h3.set_value(nnet.rand_weights((n_hidden, n_hidden)))
-        w_o.set_value(nnet.rand_weights((n_hidden, target.shape[1])))
 
         all_MC.append(mc_score)
         all_NN.append(nn_score)

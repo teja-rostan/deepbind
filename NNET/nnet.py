@@ -54,8 +54,17 @@ def dropout(X, p=0.):
     return X
 
 
-def relative_entropy(noise_py_x, Y, W):
+def weighted_entropy(noise_py_x, Y, W):
     return -T.sum((Y * T.log(noise_py_x) + (1 - Y) * T.log(1 - noise_py_x)) * W, axis=noise_py_x.ndim - 1)
+
+
+def relative_entropy(noise_py_x, Y):
+    return -T.sum(Y * T.log(noise_py_x) + (1 - Y) * T.log(1 - noise_py_x), axis=noise_py_x.ndim - 1)
+    # return -T.sum(Y * T.log(noise_py_x) + (1 - Y), axis=noise_py_x.ndim - 1)
+
+
+def rmse(noise_py_x, Y):
+    return T.sqrt(T.mean(T.sqr(Y - noise_py_x)))
 
 
 def model_sig(X, w_h, w_h2, w_o, p_drop_input, p_drop_hidden):
@@ -79,4 +88,46 @@ def model2(X, w_h, w_h2, w_o, p_drop_input, p_drop_hidden):
 
     h2 = dropout(h2, p_drop_hidden)
     py_x = softmax(T.dot(h2, w_o))
+    return py_x
+
+
+def model3(X, w_h, w_h2, w_h3, w_o, p_drop_input, p_drop_hidden):
+    X = dropout(X, p_drop_input)
+    h = rectify(T.dot(X, w_h))
+
+    h = dropout(h, p_drop_hidden)
+    h2 = rectify(T.dot(h, w_h2))
+
+    h2 = dropout(h2, p_drop_hidden)
+    h3 = rectify(T.dot(h2, w_h3))
+
+    h3 = dropout(h3, p_drop_hidden)
+    py_x = softmax(T.dot(h3, w_o))
+    return py_x
+
+
+def model_reg(X, w_h, w_h2, w_o, p_drop_input, p_drop_hidden):
+    X = dropout(X, p_drop_input)
+    h = rectify(T.dot(X, w_h))
+
+    h = dropout(h, p_drop_hidden)
+    h2 = rectify(T.dot(h, w_h2))
+
+    h2 = dropout(h2, p_drop_hidden)
+    py_x = (T.dot(h2, w_o))
+    return py_x
+
+
+def model_reg3(X, w_h, w_h2, w_h3, w_o, p_drop_input, p_drop_hidden):
+    X = dropout(X, p_drop_input)
+    h = rectify(T.dot(X, w_h))
+
+    h = dropout(h, p_drop_hidden)
+    h2 = rectify(T.dot(h, w_h2))
+
+    h2 = dropout(h2, p_drop_hidden)
+    h3 = rectify(T.dot(h2, w_h3))
+
+    h3 = dropout(h3, p_drop_hidden)
+    py_x = (T.dot(h3, w_o))
     return py_x

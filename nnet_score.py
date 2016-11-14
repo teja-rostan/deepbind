@@ -8,16 +8,17 @@ import pandas as pd
 from NNET import nnet_class
 from NNET import nnet_reg
 from NNET import nnet_ord
+from NNET import nnet_reg_one, nnet_class_one
 from NNET import get_data_target
 
 help = \
     """
     The program uses a Neural Network learning model to predict expressions (target variables) from binding scores of
-    transcription factors (evaluated by deepbind)... MORE LATER...
+    transcription factors (evaluated by deepbind).
 
     Usage:
         python nnet_score.py <input_path> <output_path> <learning_type> <delimiter> <target_size>,\n"
-        "where learning_type=class or learning_type=reg".
+        "where learning_type={class, class_one, reg, reg_one, ord}".
 
     Example:
         python nnet_score.py input_files.txt results.csv reg $'\\t' 14
@@ -41,7 +42,7 @@ def main():
 
     nn_scores = []
     col_names = []
-    index_names = []
+    corr_scores = []
 
     data_dir, _ = os.path.split(scores_list)
     data_dir_nn, data_file = os.path.split(nn_scores_file)
@@ -50,11 +51,10 @@ def main():
     rows = list_file.readlines()
     list_file.close()
 
-    cols = get_data_target.get_cols(data_dir + "/" + rows[0][:-1], delimiter, target_size)
+    cols = get_data_target.get_cols_target(data_dir + "/" + rows[0][:-1], delimiter, target_size)
     for row in rows:
         scores_file = data_dir + "/" + row[:-1]
-        df = pd.read_csv(scores_file, sep=delimiter)
-        index_names = list(np.array(list(df))[-target_size:])
+        # index_names = list(np.array(list(df))[-target_size:])
         col_names.append(row[:-4])
         print(scores_file)
 
@@ -65,6 +65,18 @@ def main():
         elif learning_type == "reg":
             all_mc, all_nn = nnet_reg.learn_and_score(scores_file, delimiter, target_size)
             nn_scores.append(all_nn)
+
+        elif learning_type == "reg_one":
+            rhos, p_values, probs, ids = nnet_reg_one.learn_and_score(scores_file, delimiter, target_size)
+            corr_scores.append(rhos)
+            corr_scores.append(p_values)
+            nn_scores.append(np.hstack([probs, ids]))
+
+        elif learning_type == "class_one":
+                rhos, p_values, probs, ids = nnet_class_one.learn_and_score(scores_file, delimiter, target_size)
+                corr_scores.append(rhos)
+                corr_scores.append(p_values)
+                nn_scores.append(np.hstack([probs, ids]))
 
         elif learning_type == "ord":
             probs, ids, spear = nnet_ord.learn_and_score(scores_file, delimiter, target_size)
@@ -80,10 +92,22 @@ def main():
         else:
             print("Error: learning_type unknown! Usage: \n"
                   "python nnet_score.py <input_path> <output_path> <learning_type> <delimiter> <target_size>,\n"
-                  "where learning_type=class or learning_type=reg")
+                  "where learning_type is class/ord/reg/reg_one.")
 
-    # df = pd.DataFrame(data=np.array(nn_scores).T, columns=col_names, index=index_names)
-    # df.to_csv(nn_scores_file, sep=delimiter)
+    if learning_type == "reg_one" or learning_type == "class_one":
+        nn_one_file = data_dir_nn + "/spearman_one" + "_" + data_file
+        # df = pd.DataFrame(data=np.array(corr_scores),
+        #                   index=(['rho', 'p-value'] * len(rows)), columns=cols[-target_size:])
+        df = pd.DataFrame(data=np.array(corr_scores), index=(['rho', 'p-value'] * len(rows)))
+        df = df.round(decimals=4)
+        df.to_csv(nn_one_file, sep=delimiter)
+        nn_scores.append(np.hstack([probs, ids]))
+
+        # nn_probs_file = data_dir_nn + "/prob_one" + "_" + data_file
+        # print(nn_probs_file)
+        # df = pd.DataFrame(data=np.vstack(nn_scores), columns=cols)
+        # df = df.round(decimals=2)
+        # df.to_csv(nn_probs_file, sep=delimiter)
 
     end = time.time() - start
     print("Program run for %.2f seconds." % end)

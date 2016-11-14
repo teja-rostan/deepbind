@@ -72,7 +72,7 @@ def learn_and_score(scores_file, delimiter, target_size):
         # print(trX.shape, trY.shape, teX.shape, teY.shape)
 
         """ Learning... """
-        for i in range(20):
+        for i in range(100):
             shuffle = np.random.permutation(len(trY))
             trY = trY[shuffle]
             trX = trX[shuffle]

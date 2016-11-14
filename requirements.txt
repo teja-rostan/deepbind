@@ -3,3 +3,5 @@ theano>=0.7.0
 numpy>=1.11.0
 biopython>=1.67
 pandas>=0.18.1
+matplotlib >= 1.5.3
+SciPy >= 0.18.0
