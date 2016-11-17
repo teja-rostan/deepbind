@@ -5,10 +5,8 @@ import numpy as np
 import os
 import pandas as pd
 
-from NNET import nnet_class
-from NNET import nnet_reg
-from NNET import nnet_ord
-from NNET import nnet_reg_one, nnet_class_one
+from NNET import nnet_class, nnet_reg, nnet_ord
+from NNET import nnet_reg_one, nnet_class_one, nnet_class_one_mul, nnet_reg_one_mul
 from NNET import get_data_target
 
 help = \
@@ -83,26 +81,38 @@ def main():
             nn_probs_file = data_dir_nn + "/prob" + row[8:11] + "_" + data_file
             nn_spear_file = data_dir_nn + "/spearman" + row[8:11] + "_" + data_file
 
-            print(nn_spear_file)
-            df = pd.DataFrame(data=probs, index=ids, columns=cols)
-            df.to_csv(nn_probs_file, sep=delimiter)
-            df = pd.DataFrame(data=spear, columns=['rho_0', 'p-value_0', 'rho_1', 'p-value_1'], index=cols[-target_size:])
-            df.to_csv(nn_spear_file, sep=delimiter)
+        elif learning_type == "testc":
+            rhos, p_values, probs, ids = nnet_class_one_mul.learn_and_score(scores_file, data_dir, rows, delimiter, target_size)
+            corr_scores.append(rhos)
+            corr_scores.append(p_values)
+            nn_scores.append(np.hstack([probs, ids]))
+
+        elif learning_type == "testr":
+            rhos, p_values, probs, ids = nnet_reg_one_mul.learn_and_score(scores_file, data_dir, rows, delimiter, target_size)
+            corr_scores.append(rhos)
+            corr_scores.append(p_values)
+            nn_scores.append(np.hstack([probs, ids]))
+
+            # print(nn_spear_file)
+            # df = pd.DataFrame(data=probs, index=ids, columns=cols)
+            # df.to_csv(nn_probs_file, sep=delimiter)
+            # df = pd.DataFrame(data=spear, columns=['rho_0', 'p-value_0', 'rho_1', 'p-value_1'], index=cols[-target_size:])
+            # df.to_csv(nn_spear_file, sep=delimiter)
 
         else:
             print("Error: learning_type unknown! Usage: \n"
                   "python nnet_score.py <input_path> <output_path> <learning_type> <delimiter> <target_size>,\n"
                   "where learning_type is class/ord/reg/reg_one.")
 
-    if learning_type == "reg_one" or learning_type == "class_one":
+    if learning_type == "reg_one" or learning_type == "class_one" or learning_type == "testc" or learning_type == "testr":
         nn_one_file = data_dir_nn + "/spearman_one" + "_" + data_file
         # df = pd.DataFrame(data=np.array(corr_scores),
         #                   index=(['rho', 'p-value'] * len(rows)), columns=cols[-target_size:])
         df = pd.DataFrame(data=np.array(corr_scores), index=(['rho', 'p-value'] * len(rows)))
         df = df.round(decimals=4)
         df.to_csv(nn_one_file, sep=delimiter)
-        nn_scores.append(np.hstack([probs, ids]))
 
+        # nn_scores.append(np.hstack([probs, ids]))
         # nn_probs_file = data_dir_nn + "/prob_one" + "_" + data_file
         # print(nn_probs_file)
         # df = pd.DataFrame(data=np.vstack(nn_scores), columns=cols)

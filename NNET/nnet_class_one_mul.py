@@ -9,37 +9,50 @@ from NNET import get_data_target
 from NNET import NnetClassLearner
 
 
-def learn_and_score(scores_file, delimiter, target_size):
+def learn_and_score(scores_file, data_dir, rows, delimiter, target_size):
     """Learning and correlation scoring input data with classificational Neural Network, one target per time. """
 
     """ Get data and target tables. """
     data, target, raw_target, target_class = get_data_target.get_original_data(scores_file, delimiter, target_size, "class")
 
+    all_targets = []
+    for row in rows:
+        scores_file = data_dir + "/" + row[:-1]
+        _, _, raw_target, _ = get_data_target.get_original_data(scores_file, delimiter, target_size, "class")
+        all_targets.append(raw_target)
+
+    all_targets = np.array(all_targets)
+    print(all_targets.shape)
+
     wild_type = 11  # eleventh target attribute is a wild-type
     # data = np.hstack([data, raw_target[:, :wild_type], raw_target[:, wild_type + 1:]]) # binding scores and mutants as attr.
     # data = np.hstack([raw_target[:, :wild_type], raw_target[:, wild_type + 1:]])  # mutants as attributes
-    data = np.hstack([data, raw_target[:, wild_type].reshape(-1, 1)])  # wild-type as attribute
+    # data = np.hstack([data, raw_target[:, wild_type].reshape(-1, 1)])  # wild-type as attribute
 
     """ Neural network architecture initialisation. """
     class_size = 3
     n_hidden_l = 2
     n_hidden_n = int(max(data.shape[1], target.shape[1]) * 2 / 3)
     # net = NnetClassLearner.NnetClassLearner(data.shape[1], class_size, n_hidden_l, n_hidden_n) # only wildtype
-    net = NnetClassLearner.NnetClassLearner(data.shape[1] + target_size - 1, class_size, n_hidden_l, n_hidden_n)  # wildtype + exps as atts, except target
+    net = NnetClassLearner.NnetClassLearner(data.shape[1] + (target_size - 1) * len(rows), class_size, n_hidden_l, n_hidden_n)  # wildtype + exps as atts, except target
 
     rhos = []
     p_values = []
     all_probs = []
     all_ids = []
     ids = get_data_target.get_ids(scores_file, delimiter, 'ID')
-    # max_len = get_max_len(target, target_class, target_size)  # balanced data
-    max_len = target.shape[0] / class_size  # unbalanced data
+    max_len = get_max_len(target, target_class, target_size)  # balanced data
+    # max_len = target.shape[0] / class_size  # unbalanced data
 
     # for t in range(target_size):
     for t in np.hstack([range(wild_type), range(wild_type+1, target_size)]):
         target_c = target_class[:, t]
-        data_c = np.hstack([data, raw_target[:, :t], raw_target[:, t + 1:]])  # wildtype + exps as atts, except target
-        # data_c = data  # only wildtype (to be sure, the data is not modified in the following process)
+        data_c = data
+        print(data_c.shape)
+        print(np.hstack(all_targets[:, :, :t]).shape)
+        print(np.hstack(all_targets[:, :, t+1:]).shape)
+        data_c = np.hstack([data_c, np.hstack(all_targets[:, :, :t]), np.hstack(all_targets[:, :, t + 1:])])
+        print(data_c.shape)
 
         """ Ignore missing attributes """
         if len(np.unique(target_c)) == 1:
@@ -50,8 +63,8 @@ def learn_and_score(scores_file, delimiter, target_size):
             print(max_len * class_size, 2)
             continue
 
-        # targets, ids_b, data_b = get_balanced_data(t, class_size, target_c, data_c, target, max_len, ids)  # balanced data
-        targets, data_b, ids_b = target[:, class_size * t:class_size * t + class_size], data_c, ids  # unbalanced data
+        targets, ids_b, data_b = get_balanced_data(t, class_size, target_c, data_c, target, max_len, ids)  # balanced data
+        # targets, data_b, ids_b = target[:, class_size * t:class_size * t + class_size], data_c, ids  # unbalanced data
 
         probs = np.zeros((targets.shape[0], 2))
         ids_end = np.zeros((targets.shape[0], 1)).astype(str)

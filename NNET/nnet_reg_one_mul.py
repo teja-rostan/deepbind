@@ -9,23 +9,32 @@ from NNET import get_data_target
 from NNET import NnetRegLearner
 
 
-def learn_and_score(scores_file, delimiter, target_size):
+def learn_and_score(scores_file, data_dir, rows, delimiter, target_size):
     """Learning and correlation scoring input data with regressional Neural Network, one target per time. """
 
     """ Get data and target tables. """
     data, target, _, _ = get_data_target.get_original_data(scores_file, delimiter, target_size, "reg")
 
+    all_targets = []
+    for row in rows:
+        scores_file = data_dir + "/" + row[:-1]
+        _, raw_target, _, _ = get_data_target.get_original_data(scores_file, delimiter, target_size, "reg")
+        all_targets.append(raw_target)
+
+    all_targets = np.array(all_targets)
+    print(all_targets.shape)
+
     wild_type = 11  # eleventh target attribute is a wild-type
     # data = np.hstack([data, target[:, :wild_type], target[:, wild_type + 1:]]) # binding scores and mutants as attr.
     # data = np.hstack([target[:, :wild_type], target[:, wild_type + 1:]])  # mutants as attributes
-    data = np.hstack([data, target[:, wild_type].reshape(-1, 1)])  # wild-type as attribute
+    # data = np.hstack([data, target[:, wild_type].reshape(-1, 1)])  # wild-type as attribute
 
     """ Neural network architecture initialisation. """
     class_size = 3
     n_hidden_n = int(max(data.shape[1], target.shape[1]) * 2 / 3)
     n_hidden_l = 2
     # net = NnetRegLearner.NnetRegLearner(data.shape[1], n_hidden_l, n_hidden_n)  # only wildtype
-    net = NnetRegLearner.NnetRegLearner(data.shape[1] + target_size - 1, n_hidden_l, n_hidden_n)  # wildtype + exps as atts, except target
+    net = NnetRegLearner.NnetRegLearner(data.shape[1] + (target_size - 1) * len(rows), n_hidden_l, n_hidden_n)  # wildtype + exps as atts, except target
 
     rhos = []
     p_values = []
@@ -41,8 +50,12 @@ def learn_and_score(scores_file, delimiter, target_size):
     # for t in range(target_size):
     for t in np.hstack([range(wild_type), range(wild_type+1, target_size)]):
         target_r = target[:, t]
-        data_c = np.hstack([data, target[:, :t], target[:, t + 1:]])  # wildtype + exps as atts, except target
-        # data_c = data  # only wildtype
+        data_c = data
+        print(data_c.shape)
+        print(np.hstack(all_targets[:, :, :t]).shape)
+        print(np.hstack(all_targets[:, :, t + 1:]).shape)
+        data_c = np.hstack([data_c, np.hstack(all_targets[:, :, :t]), np.hstack(all_targets[:, :, t + 1:])])
+        print(data_c.shape)
 
         """ Ignore missing attributes """
         if len(np.unique(target_r)) == 1:
