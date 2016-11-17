@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e39fe577-1de2-45d9-ae72-9b7e1c3e52e8" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/DDB_DDB_G/DDB-GeneID-UniProt.txt" afterPath="$PROJECT_DIR$/DEEPBIND/DDB_DDB_G/DDB-GeneID-UniProt.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/NNET/nnet_class_one.py" afterPath="$PROJECT_DIR$/NNET/nnet_class_one.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/NNET/nnet_reg_one.py" afterPath="$PROJECT_DIR$/NNET/nnet_reg_one.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nnet_score.py" afterPath="$PROJECT_DIR$/nnet_score.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/plot_correlations.py" afterPath="$PROJECT_DIR$/plot_correlations.py" />
     </list>
     <ignored path="deepBind.iws" />
@@ -99,8 +95,8 @@
       <file leaf-file-name="plot_correlations.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/plot_correlations.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="201">
-              <caret line="40" column="45" selection-start-line="40" selection-start-column="45" selection-end-line="40" selection-end-column="45" />
+            <state relative-caret-position="426">
+              <caret line="53" column="38" selection-start-line="53" selection-start-column="38" selection-end-line="53" selection-end-column="38" />
               <folding />
             </state>
           </provider>
@@ -196,8 +192,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="922" />
-    <option name="y" value="124" />
+    <option name="x" value="985" />
+    <option name="y" value="137" />
     <option name="width" value="1408" />
     <option name="height" value="1157" />
   </component>
@@ -575,7 +571,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="922" y="124" width="1408" height="1157" extended-state="0" />
+    <frame x="985" y="137" width="1408" height="1157" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15861572" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -741,14 +737,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="547">
           <caret line="1901" column="53" selection-start-line="1900" selection-start-column="15" selection-end-line="1901" selection-end-column="53" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/venv/lib/python3.5/site-packages/matplotlib/pyplot.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="337">
-          <caret line="940" column="4" selection-start-line="940" selection-start-column="4" selection-end-line="940" selection-end-column="4" />
           <folding />
         </state>
       </provider>
@@ -971,10 +959,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/venv/lib/python3.5/site-packages/matplotlib/pyplot.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="337">
+          <caret line="1651" column="4" selection-start-line="1651" selection-start-column="4" selection-end-line="1651" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/plot_correlations.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="40" column="45" selection-start-line="40" selection-start-column="45" selection-end-line="40" selection-end-column="45" />
+        <state relative-caret-position="426">
+          <caret line="53" column="38" selection-start-line="53" selection-start-column="38" selection-end-line="53" selection-end-column="38" />
           <folding />
         </state>
       </provider>
