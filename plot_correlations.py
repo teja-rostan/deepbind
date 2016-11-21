@@ -44,11 +44,6 @@ def main():
     plt.grid()
 
     plt.subplot(212)
-    # plt.plot(np.mean(np.array(plots_time)[[5, 6]].T, axis=1))
-    #means = np.mean(np.array(plots_time)[[5, 6]].T, axis=1)
-    # print(np.array(plots_time)[[5, 6]].T)
-    # stds = np.std(np.array(plots_time)[[5, 6]].T, axis=1)
-    # plt.errorbar(means, yerr=stds)
     plt.plot(np.mean(np.array(plots_time)[[5, 6]].T, axis=1))
     plt.xticks(np.arange(13), ['0h', '2h', '4h', '6h', '8h', '10h', '12h', '14h', '16h', '18h', '20h', '22h', '24h'])
     plt.legend(np.array(plots_names)[[5, 6]], loc='upper left')

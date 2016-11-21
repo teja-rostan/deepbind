@@ -25,36 +25,38 @@ def learn_and_score(scores_file, data_dir, rows, delimiter, target_size):
     print(all_targets.shape)
 
     wild_type = 11  # eleventh target attribute is a wild-type
-    # data = np.hstack([data, target[:, :wild_type], target[:, wild_type + 1:]]) # binding scores and mutants as attr.
-    # data = np.hstack([target[:, :wild_type], target[:, wild_type + 1:]])  # mutants as attributes
-    # data = np.hstack([data, target[:, wild_type].reshape(-1, 1)])  # wild-type as attribute
 
     """ Neural network architecture initialisation. """
     class_size = 3
     n_hidden_n = int(max(data.shape[1], target.shape[1]) * 2 / 3)
     n_hidden_l = 2
-    # net = NnetRegLearner.NnetRegLearner(data.shape[1], n_hidden_l, n_hidden_n)  # only wildtype
-    net = NnetRegLearner.NnetRegLearner(data.shape[1] + (target_size - 1) * len(rows), n_hidden_l, n_hidden_n)  # wildtype + exps as atts, except target
+
+    # net = NnetRegLearner.NnetRegLearner(data.shape[1] + (target_size - 1), n_hidden_l, n_hidden_n)  # protwildtime
+    net = NnetRegLearner.NnetRegLearner(data.shape[1] + (target_size - 1) * len(rows), 1, n_hidden_l, n_hidden_n)  # protwildexptime
+    # net = NnetRegLearner.NnetRegLearner((target_size - 1), n_hidden_l, n_hidden_n)  # wildtime
+    # net = NnetRegLearner.NnetRegLearner((target_size - 1) * len(rows), 1, n_hidden_l, n_hidden_n)  # wildexptime
 
     rhos = []
     p_values = []
     all_probs = []
     all_ids = []
-    down_per = 10  # 10th percentile, decides over analysis on Orange (obvious groups of expressions)
-    up_per = 90  # 90th percentile, decides over analysis on Orange (obvious groups of expressions)
+
     ids_prob = get_data_target.get_ids(scores_file, delimiter, 'ID')
 
-    max_len = get_max_len(target, target_size, down_per, up_per)  # balanced data
-    # max_len = target.shape[0] / class_size  # unbalanced data
+    down_per = 10  # 10th percentile, decides over analysis on Orange (obvious groups of expressions)
+    up_per = 90  # 90th percentile, decides over analysis on Orange (obvious groups of expressions)
+
+    # max_len = get_max_len(target, target_size, down_per, up_per)  # balanced data
+    max_len = target.shape[0] / class_size  # unbalanced data
 
     # for t in range(target_size):
     for t in np.hstack([range(wild_type), range(wild_type+1, target_size)]):
         target_r = target[:, t]
         data_c = data
-        print(data_c.shape)
-        print(np.hstack(all_targets[:, :, :t]).shape)
-        print(np.hstack(all_targets[:, :, t + 1:]).shape)
-        data_c = np.hstack([data_c, np.hstack(all_targets[:, :, :t]), np.hstack(all_targets[:, :, t + 1:])])
+        # data_c = np.hstack([data_c, np.hstack(all_targets[:, :, wildtype])])  # protwildtime
+        data_c = np.hstack([data_c, np.hstack(all_targets[:, :, :t]), np.hstack(all_targets[:, :, t + 1:])])  # protwildexptime
+        # data_c = np.hstack([np.hstack(all_targets[:, :, wildtype])])  # wildtime
+        # data_c = np.hstack([np.hstack(all_targets[:, :, :t]), np.hstack(all_targets[:, :, t + 1:])])  # wildexptime
         print(data_c.shape)
 
         """ Ignore missing attributes """
@@ -66,8 +68,8 @@ def learn_and_score(scores_file, data_dir, rows, delimiter, target_size):
             print(max_len * class_size, 2)
             continue
 
-        data_b, targets, ids_b = get_balanced_data(target_r, data_c, max_len, ids_prob, down_per, up_per)  # balanced data
-        # targets, data_b, ids_b = target_r.reshape(-1, 1), data_c, ids_prob  # unbalanced data
+        # data_b, targets, ids_b = get_balanced_data(target_r, data_c, max_len, ids_prob, down_per, up_per)  # balanced data
+        targets, data_b, ids_b = target_r.reshape(-1, 1), data_c, ids_prob  # unbalanced data
 
         probs = np.zeros((targets.shape[0], 2))
         ids_end = np.zeros((targets.shape[0], 1)).astype(str)
@@ -151,16 +153,6 @@ def get_balanced_data(targets, data, max_len, ids, down_per, up_per):
     ids_prob = ids_prob[shuffle]
     datas = data_nc[shuffle]
     return datas, targets, ids_prob
-
-
-def data_selection(data, size):
-    """ Selecting up to 80 attributes with highest number of outliers. (fast fix)"""
-
-    data = data[:, [517, 625, 622, 105, 602, 130, 816, 77, 375, 209, 274, 687, 514, 548, 760, 493, 733, 615, 768, 135,
-                    156, 95, 679, 264, 680, 327, 923, 504, 515, 924, 57, 838, 589, 195, 306, 398, 248, 546, 117, 632,
-                    726, 372, 345, 823, 80, 29, 706, 669, 74, 720, 177, 412, 174, 91, 829, 877, 811, 419, 145, 761,
-                    165, 509, 847, 777, 532, 475, 137, 782, 700, 445, 513, 478, 118, 54, 499, 104, 166, 738, 26, 146]]
-    return data[:, :size]
 
 
 def main():

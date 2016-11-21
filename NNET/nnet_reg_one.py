@@ -1,12 +1,9 @@
 import sys
 import time
-
 import numpy as np
 from sklearn.cross_validation import KFold
 from scipy.stats import spearmanr
-
-from NNET import get_data_target
-from NNET import NnetRegLearner
+from NNET import get_data_target, NnetRegLearner
 
 
 def learn_and_score(scores_file, delimiter, target_size):
@@ -16,24 +13,32 @@ def learn_and_score(scores_file, delimiter, target_size):
     data, target, _, _ = get_data_target.get_original_data(scores_file, delimiter, target_size, "reg")
 
     wild_type = 11  # eleventh target attribute is a wild-type
-    # data = np.hstack([data, target[:, :wild_type], target[:, wild_type + 1:]]) # binding scores and mutants as attr.
-    # data = np.hstack([target[:, :wild_type], target[:, wild_type + 1:]])  # mutants as attributes
-    data = np.hstack([data, target[:, wild_type].reshape(-1, 1)])  # wild-type as attribute
+    # prot, exp, protexp
+    # wild, wildexp, protwild, protwildexp
+
+    # data = np.hstack([data, target[:, :wild_type], target[:, wild_type + 1:]]) # protexp.
+    # data = np.hstack([target[:, :wild_type], target[:, wild_type + 1:]])  # exp
+
+    # data = np.hstack([data, target[:, wild_type].reshape(-1, 1)])  # protwild
+    # data = np.hstack([target[:, wild_type].reshape(-1, 1)])  # wild
 
     """ Neural network architecture initialisation. """
     class_size = 3
-    n_hidden_n = int(max(data.shape[1], target.shape[1]) * 2 / 3)
     n_hidden_l = 2
-    # net = NnetRegLearner.NnetRegLearner(data.shape[1], n_hidden_l, n_hidden_n)  # only wildtype
-    net = NnetRegLearner.NnetRegLearner(data.shape[1] + target_size - 1, n_hidden_l, n_hidden_n)  # wildtype + exps as atts, except target
+    n_hidden_n = int(max(data.shape[1], target.shape[1]) * 2 / 3)
+
+    # net = NnetRegLearner.NnetRegLearner(data.shape[1], n_hidden_l, n_hidden_n)  # wild/protwild or exp/protexp
+    # net = NnetRegLearner.NnetRegLearner(data.shape[1] + target_size - 1, 1, n_hidden_l, n_hidden_n)  # protwildexp
+    net = NnetRegLearner.NnetRegLearner(target_size - 1, 1, n_hidden_l, n_hidden_n)  # wildexp
 
     rhos = []
     p_values = []
     all_probs = []
     all_ids = []
+    ids_prob = get_data_target.get_ids(scores_file, delimiter, 'ID')
+
     down_per = 10  # 10th percentile, decides over analysis on Orange (obvious groups of expressions)
     up_per = 90  # 90th percentile, decides over analysis on Orange (obvious groups of expressions)
-    ids_prob = get_data_target.get_ids(scores_file, delimiter, 'ID')
 
     max_len = get_max_len(target, target_size, down_per, up_per)  # balanced data
     # max_len = target.shape[0] / class_size  # unbalanced data
@@ -41,8 +46,9 @@ def learn_and_score(scores_file, delimiter, target_size):
     # for t in range(target_size):
     for t in np.hstack([range(wild_type), range(wild_type+1, target_size)]):
         target_r = target[:, t]
-        data_c = np.hstack([data, target[:, :t], target[:, t + 1:]])  # wildtype + exps as atts, except target
-        # data_c = data  # only wildtype
+        # data_c = np.hstack([data, target[:, :t], target[:, t + 1:]])  # protwildexp
+        data_c = np.hstack([target[:, :t], target[:, t + 1:]])  # wildexp
+        # data_c = data  # wild/protwild or exp/protexp
 
         """ Ignore missing attributes """
         if len(np.unique(target_r)) == 1:

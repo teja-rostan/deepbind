@@ -1,12 +1,9 @@
 import sys
 import time
-
 import numpy as np
 from sklearn.cross_validation import KFold
 from scipy.stats import spearmanr
-
-from NNET import get_data_target
-from NNET import NnetClassLearner
+from NNET import get_data_target, NnetClassLearner
 
 
 def learn_and_score(scores_file, delimiter, target_size):
@@ -16,16 +13,21 @@ def learn_and_score(scores_file, delimiter, target_size):
     data, target, raw_target, target_class = get_data_target.get_original_data(scores_file, delimiter, target_size, "class")
 
     wild_type = 11  # eleventh target attribute is a wild-type
-    # data = np.hstack([data, raw_target[:, :wild_type], raw_target[:, wild_type + 1:]]) # binding scores and mutants as attr.
-    # data = np.hstack([raw_target[:, :wild_type], raw_target[:, wild_type + 1:]])  # mutants as attributes
-    data = np.hstack([data, raw_target[:, wild_type].reshape(-1, 1)])  # wild-type as attribute
+
+    # data = np.hstack([data, raw_target[:, :wild_type], raw_target[:, wild_type + 1:]]) # protexp
+    # data = np.hstack([raw_target[:, :wild_type], raw_target[:, wild_type + 1:]])  # exp
+
+    # data = np.hstack([data, raw_target[:, wild_type].reshape(-1, 1)])  # protwild
+    # data = np.hstack([raw_target[:, wild_type].reshape(-1, 1)])  # wild
 
     """ Neural network architecture initialisation. """
     class_size = 3
     n_hidden_l = 2
     n_hidden_n = int(max(data.shape[1], target.shape[1]) * 2 / 3)
-    # net = NnetClassLearner.NnetClassLearner(data.shape[1], class_size, n_hidden_l, n_hidden_n) # only wildtype
-    net = NnetClassLearner.NnetClassLearner(data.shape[1] + target_size - 1, class_size, n_hidden_l, n_hidden_n)  # wildtype + exps as atts, except target
+
+    # net = NnetClassLearner.NnetClassLearner(data.shape[1], class_size, n_hidden_l, n_hidden_n) # wild/protwild or exp/protexp
+    # net = NnetClassLearner.NnetClassLearner(data.shape[1] + target_size - 1, class_size, n_hidden_l, n_hidden_n)  # protwildexp
+    net = NnetClassLearner.NnetClassLearner(target_size - 1, class_size, n_hidden_l, n_hidden_n)  # wildexp
 
     rhos = []
     p_values = []
@@ -38,8 +40,9 @@ def learn_and_score(scores_file, delimiter, target_size):
     # for t in range(target_size):
     for t in np.hstack([range(wild_type), range(wild_type+1, target_size)]):
         target_c = target_class[:, t]
-        data_c = np.hstack([data, raw_target[:, :t], raw_target[:, t + 1:]])  # wildtype + exps as atts, except target
-        # data_c = data  # only wildtype (to be sure, the data is not modified in the following process)
+        # data_c = np.hstack([data, raw_target[:, :t], raw_target[:, t + 1:]])  # protwildexp
+        data_c = np.hstack([raw_target[:, :t], raw_target[:, t + 1:]])  # wildexp
+        # data_c = data  # # wild/protwild or exp/protexp
 
         """ Ignore missing attributes """
         if len(np.unique(target_c)) == 1:

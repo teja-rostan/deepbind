@@ -1,15 +1,9 @@
 import sys
 import time
-
 import numpy as np
-import theano
 from sklearn.cross_validation import KFold
 from sklearn.metrics import accuracy_score
-from theano import tensor as T
-
-from NNET import nnet
-from NNET import get_data_target
-from NNET import NnetClassLearner
+from NNET import get_data_target,  NnetClassLearner
 
 
 def score_ca_and_prob(y_predicted, y_true):
@@ -65,9 +59,8 @@ def learn_and_score(scores_file, delimiter, target_size):
     n_hidden_n = int(max(data.shape[1], target.shape[1]) * 2 / 3)
     n_hidden_l = 2
     class_size = target_size * 3
-    net = NnetClassLearner.NnetClass(data.shape[1], class_size, n_hidden_l, n_hidden_n)
+    net = NnetClassLearner.NnetClassLearner(data.shape[1], class_size, n_hidden_l, n_hidden_n)
 
-    """ Split to train and test 10-fold Cross-Validation """
     all_MC = []
     all_NN = []
     idx = 0
@@ -75,6 +68,7 @@ def learn_and_score(scores_file, delimiter, target_size):
     probabilities = np.zeros((len(id), target_size*2))
     prob_ids = []
 
+    """ Split to train and test 10-fold Cross-Validation """
     skf = KFold(target.shape[0], n_folds=10, shuffle=True)
     for train_index, test_index in skf:
         trX, teX = data[train_index], data[test_index]
@@ -116,7 +110,7 @@ def main():
     delimiter = arguments[1]
     target_size = int(arguments[2])
 
-    all_mc, all_nn, probs = learn_and_score(scores_file, delimiter, target_size)
+    learn_and_score(scores_file, delimiter, target_size)
 
     end = time.time() - start
     print("Program run for %.2f seconds." % end)

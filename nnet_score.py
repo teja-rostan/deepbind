@@ -6,7 +6,7 @@ import os
 import pandas as pd
 
 from NNET import nnet_class, nnet_reg, nnet_ord
-from NNET import nnet_reg_one, nnet_class_one, nnet_class_one_mul, nnet_reg_one_mul
+from NNET import nnet_reg_one, nnet_class_one, nnet_class_one_time, nnet_reg_one_time
 from NNET import get_data_target
 
 help = \
@@ -71,24 +71,24 @@ def main():
             nn_scores.append(np.hstack([probs, ids]))
 
         elif learning_type == "class_one":
-                rhos, p_values, probs, ids = nnet_class_one.learn_and_score(scores_file, delimiter, target_size)
-                corr_scores.append(rhos)
-                corr_scores.append(p_values)
-                nn_scores.append(np.hstack([probs, ids]))
+            rhos, p_values, probs, ids = nnet_class_one.learn_and_score(scores_file, delimiter, target_size)
+            corr_scores.append(rhos)
+            corr_scores.append(p_values)
+            nn_scores.append(np.hstack([probs, ids]))
 
         elif learning_type == "ord":
             probs, ids, spear = nnet_ord.learn_and_score(scores_file, delimiter, target_size)
             nn_probs_file = data_dir_nn + "/prob" + row[8:11] + "_" + data_file
             nn_spear_file = data_dir_nn + "/spearman" + row[8:11] + "_" + data_file
 
-        elif learning_type == "testc":
-            rhos, p_values, probs, ids = nnet_class_one_mul.learn_and_score(scores_file, data_dir, rows, delimiter, target_size)
+        elif learning_type == "class_one_time":
+            rhos, p_values, probs, ids = nnet_class_one_time.learn_and_score(scores_file, data_dir, rows, delimiter, target_size)
             corr_scores.append(rhos)
             corr_scores.append(p_values)
             nn_scores.append(np.hstack([probs, ids]))
 
-        elif learning_type == "testr":
-            rhos, p_values, probs, ids = nnet_reg_one_mul.learn_and_score(scores_file, data_dir, rows, delimiter, target_size)
+        elif learning_type == "reg_one_time":
+            rhos, p_values, probs, ids = nnet_reg_one_time.learn_and_score(scores_file, data_dir, rows, delimiter, target_size)
             corr_scores.append(rhos)
             corr_scores.append(p_values)
             nn_scores.append(np.hstack([probs, ids]))

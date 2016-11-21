@@ -13,7 +13,8 @@ def learn_and_score(scores_file, data_dir, rows, delimiter, target_size):
     """Learning and correlation scoring input data with classificational Neural Network, one target per time. """
 
     """ Get data and target tables. """
-    data, target, raw_target, target_class = get_data_target.get_original_data(scores_file, delimiter, target_size, "class")
+    data, target, raw_target, target_class = get_data_target.get_original_data(scores_file, delimiter, target_size,
+                                                                               "class")
 
     all_targets = []
     for row in rows:
@@ -25,22 +26,24 @@ def learn_and_score(scores_file, data_dir, rows, delimiter, target_size):
     print(all_targets.shape)
 
     wild_type = 11  # eleventh target attribute is a wild-type
-    # data = np.hstack([data, raw_target[:, :wild_type], raw_target[:, wild_type + 1:]]) # binding scores and mutants as attr.
-    # data = np.hstack([raw_target[:, :wild_type], raw_target[:, wild_type + 1:]])  # mutants as attributes
-    # data = np.hstack([data, raw_target[:, wild_type].reshape(-1, 1)])  # wild-type as attribute
 
     """ Neural network architecture initialisation. """
     class_size = 3
     n_hidden_l = 2
     n_hidden_n = int(max(data.shape[1], target.shape[1]) * 2 / 3)
-    # net = NnetClassLearner.NnetClassLearner(data.shape[1], class_size, n_hidden_l, n_hidden_n) # only wildtype
-    net = NnetClassLearner.NnetClassLearner(data.shape[1] + (target_size - 1) * len(rows), class_size, n_hidden_l, n_hidden_n)  # wildtype + exps as atts, except target
+
+    net = NnetClassLearner.NnetClassLearner(data.shape[1] + (target_size - 1), class_size, n_hidden_l, n_hidden_n)  # protwildtime
+    # net = NnetClassLearner.NnetClassLearner(data.shape[1] + (target_size - 1) * len(rows), class_size, n_hidden_l, n_hidden_n)  # protwildtexptime
+    # net = NnetClassLearner.NnetClassLearner((target_size - 1), class_size, n_hidden_l, n_hidden_n)  # wildtime
+    # net = NnetClassLearner.NnetClassLearner((target_size - 1) * len(rows), class_size, n_hidden_l, n_hidden_n)  # wildtexptime
 
     rhos = []
     p_values = []
     all_probs = []
     all_ids = []
+
     ids = get_data_target.get_ids(scores_file, delimiter, 'ID')
+
     max_len = get_max_len(target, target_class, target_size)  # balanced data
     # max_len = target.shape[0] / class_size  # unbalanced data
 
@@ -48,10 +51,10 @@ def learn_and_score(scores_file, data_dir, rows, delimiter, target_size):
     for t in np.hstack([range(wild_type), range(wild_type+1, target_size)]):
         target_c = target_class[:, t]
         data_c = data
-        print(data_c.shape)
-        print(np.hstack(all_targets[:, :, :t]).shape)
-        print(np.hstack(all_targets[:, :, t+1:]).shape)
-        data_c = np.hstack([data_c, np.hstack(all_targets[:, :, :t]), np.hstack(all_targets[:, :, t + 1:])])
+        data_c = np.hstack([data_c, np.hstack(all_targets[:, :, wild_type])])  # protwildtime
+        # data_c = np.hstack([data_c, np.hstack(all_targets[:, :, :t]), np.hstack(all_targets[:, :, t + 1:])])  # protwildexptime
+        # data_c = np.hstack([np.hstack(all_targets[:, :, wild_type])])  # wildtime
+        # data_c = np.hstack([np.hstack(all_targets[:, :, :t]), np.hstack(all_targets[:, :, t + 1:])])  # wildexptime
         print(data_c.shape)
 
         """ Ignore missing attributes """
@@ -143,16 +146,6 @@ def get_balanced_data(t, class_size, targets, data, target, max_len, ids):
     ids_prob = ids_prob[shuffle]
     datas = data_nc[shuffle]
     return targets, ids_prob, datas
-
-
-def data_selection(data, size):
-    """ Selecting up to 80 attributes with highest number of outliers. (fast fix)"""
-
-    data = data[:, [517, 625, 622, 105, 602, 130, 816, 77, 375, 209, 274, 687, 514, 548, 760, 493, 733, 615, 768, 135,
-                    156, 95, 679, 264, 680, 327, 923, 504, 515, 924, 57, 838, 589, 195, 306, 398, 248, 546, 117, 632,
-                    726, 372, 345, 823, 80, 29, 706, 669, 74, 720, 177, 412, 174, 91, 829, 877, 811, 419, 145, 761,
-                    165, 509, 847, 777, 532, 475, 137, 782, 700, 445, 513, 478, 118, 54, 499, 104, 166, 738, 26, 146]]
-    return data[:, :size]
 
 
 def majority(tr_y, te_y):

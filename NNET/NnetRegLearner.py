@@ -9,7 +9,7 @@ from theano import tensor as T
 
 class NnetRegLearner:
 
-    def __init__(self, attribute_size, n_hidden_layers=2, n_hidden_neurons=30):
+    def __init__(self, attribute_size, output_size, n_hidden_layers=2, n_hidden_neurons=30):
         """
 
         :param attribute_size: Number of input attributes for neural network
@@ -20,13 +20,14 @@ class NnetRegLearner:
         self.n_hidden_layers = n_hidden_layers
         self.n_hidden_neurons = n_hidden_neurons
         self.attribute_size = attribute_size
+        self.output_size = output_size
 
         X = T.fmatrix()
         Y = T.fmatrix()
 
         self.w_h = nnet.init_weights((self.attribute_size, self.n_hidden_neurons))
         self.w_h2 = nnet.init_weights((self.n_hidden_neurons, self.n_hidden_neurons))
-        self.w_o = nnet.init_weights((self.n_hidden_neurons, 1))
+        self.w_o = nnet.init_weights((self.n_hidden_neurons, self.output_size))
 
         if self.n_hidden_layers == 2:
 
@@ -79,7 +80,7 @@ class NnetRegLearner:
         """ Randomize weights after training and predicting for new round"""
         self.w_h.set_value(nnet.rand_weights((self.attribute_size, self.n_hidden_neurons)))
         self.w_h2.set_value(nnet.rand_weights((self.n_hidden_neurons, self.n_hidden_neurons)))
-        self.w_o.set_value(nnet.rand_weights((self.n_hidden_neurons, 1)))
+        self.w_o.set_value(nnet.rand_weights((self.n_hidden_neurons, self.output_size)))
 
         if self.n_hidden_layers == 3:
             self.w_h3.set_value(nnet.rand_weights((self.n_hidden_neurons, self.n_hidden_neurons)))
