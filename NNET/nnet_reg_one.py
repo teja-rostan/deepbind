@@ -1,5 +1,3 @@
-import sys
-import time
 import numpy as np
 from sklearn.cross_validation import KFold
 from scipy.stats import spearmanr
@@ -7,7 +5,16 @@ from NNET import get_data_target, NnetRegLearner
 
 
 def learn_and_score(scores_file, delimiter, target_size):
-    """Learning and correlation scoring input data with regressional Neural Network, one target per time. """
+    """
+    Neural network learning and correlation scoring. Regressional Neural Network, learning and predicting one target
+    per time on balanced or unbalanced data.
+    :param scores_file: The file with data and targets for neural network learning.
+    :param delimiter: The delimiter for the scores_file.
+    :param target_size: Number of targets in scores_file (the number of columns from the end of scores_file that we want
+    to extract and double).
+    :return: rhos and p-values of relative Spearman correlation, predictions and ids of instances that were included
+    in learning and testing.
+    """
 
     """ Get data and target tables. """
     data, target, _, _ = get_data_target.get_original_data(scores_file, delimiter, target_size, "reg")
@@ -27,7 +34,7 @@ def learn_and_score(scores_file, delimiter, target_size):
     n_hidden_l = 2
     n_hidden_n = int(max(data.shape[1], target.shape[1]) * 2 / 3)
 
-    # net = NnetRegLearner.NnetRegLearner(data.shape[1], n_hidden_l, n_hidden_n)  # wild/protwild or exp/protexp
+    # net = NnetRegLearner.NnetRegLearner(data.shape[1], 1, n_hidden_l, n_hidden_n)  # wild/protwild or exp/protexp
     # net = NnetRegLearner.NnetRegLearner(data.shape[1] + target_size - 1, 1, n_hidden_l, n_hidden_n)  # protwildexp
     net = NnetRegLearner.NnetRegLearner(target_size - 1, 1, n_hidden_l, n_hidden_n)  # wildexp
 
@@ -96,7 +103,14 @@ def learn_and_score(scores_file, delimiter, target_size):
 
 
 def get_max_len(target, target_size, down_per, up_per):
-    """ Get length of one class in balanced data """
+    """
+    Get maximum possible number of instances of one class to get balanced data through all target features.
+    :param target: all feature targets of raw expressions
+    :param target_size: number of target features
+    :param down_per: lower threshold for classification of targets as percentile
+    :param up_per: upper threshold for classification of targets as percentile
+    :return: max class size
+    """
 
     max_len = len(target)
     for t in range(target_size):
@@ -113,7 +127,16 @@ def get_max_len(target, target_size, down_per, up_per):
 
 
 def get_balanced_data(targets, data, max_len, ids, down_per, up_per):
-    """ Balancing data (Make a set of instances of every class to equal size). """
+    """
+    Balancing data (Make a set of instances of every class to equal size).
+    :param targets: target feature that we want to balance
+    :param data: the input attributes that we sample based on target balancing
+    :param max_len: maximum number of instances per class
+    :param ids: attribute names that we sample based on target balancing
+    :param down_per: lower threshold for classification of targets as percentile
+    :param up_per: upper threshold for classification of targets as percentile
+    :return: returns balanced data, target and ids
+    """
 
     down_10 = np.percentile(targets, down_per)
     up_10 = np.percentile(targets, up_per)
@@ -145,34 +168,3 @@ def get_balanced_data(targets, data, max_len, ids, down_per, up_per):
     datas = data_nc[shuffle]
     return datas, targets, ids_prob
 
-
-def data_selection(data, size):
-    """ Selecting up to 80 attributes with highest number of outliers. (fast fix)"""
-
-    data = data[:, [517, 625, 622, 105, 602, 130, 816, 77, 375, 209, 274, 687, 514, 548, 760, 493, 733, 615, 768, 135,
-                    156, 95, 679, 264, 680, 327, 923, 504, 515, 924, 57, 838, 589, 195, 306, 398, 248, 546, 117, 632,
-                    726, 372, 345, 823, 80, 29, 706, 669, 74, 720, 177, 412, 174, 91, 829, 877, 811, 419, 145, 761,
-                    165, 509, 847, 777, 532, 475, 137, 782, 700, 445, 513, 478, 118, 54, 499, 104, 166, 738, 26, 146]]
-    return data[:, :size]
-
-
-def main():
-    start = time.time()
-    arguments = sys.argv[1:]
-
-    if len(arguments) < 3:
-        print("Not enough arguments stated! Usage: \n"
-              "python nnet_reg_one.py <scores_file_path> <predicted_scores_path> <delimiter> <target_size>.")
-        sys.exit(0)
-
-    scores_file = arguments[0]
-    delimiter = arguments[1]
-    target_size = int(arguments[2])
-
-    learn_and_score(scores_file, delimiter, target_size)
-
-    end = time.time() - start
-    print("Program run for %.2f seconds." % end)
-
-if __name__ == '__main__':
-    main()

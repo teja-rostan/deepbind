@@ -2,14 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e39fe577-1de2-45d9-ae72-9b7e1c3e52e8" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/NNET/nnet_class_one_mul.py" afterPath="$PROJECT_DIR$/NNET/nnet_class_one_time.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/NNET/nnet_reg_one_mul.py" afterPath="$PROJECT_DIR$/NNET/nnet_reg_one_time.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/NNET/NnetClassLearner.py" afterPath="$PROJECT_DIR$/NNET/NnetClassLearner.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/NNET/NnetRegLearner.py" afterPath="$PROJECT_DIR$/NNET/NnetRegLearner.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/NNET/nnet_class.py" afterPath="$PROJECT_DIR$/NNET/nnet_class.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/NNET/README.md" afterPath="$PROJECT_DIR$/NNET/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/NNET/get_data_target.py" afterPath="$PROJECT_DIR$/NNET/get_data_target.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/NNET/nnet_class_one.py" afterPath="$PROJECT_DIR$/NNET/nnet_class_one.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/NNET/nnet_reg.py" afterPath="$PROJECT_DIR$/NNET/nnet_reg.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/NNET/nnet_class_one_time.py" afterPath="$PROJECT_DIR$/NNET/nnet_class_one_time.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/NNET/nnet_reg_one.py" afterPath="$PROJECT_DIR$/NNET/nnet_reg_one.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/NNET/nnet_reg_one_time.py" afterPath="$PROJECT_DIR$/NNET/nnet_reg_one_time.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nnet_score.py" afterPath="$PROJECT_DIR$/nnet_score.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/plot_correlations.py" afterPath="$PROJECT_DIR$/plot_correlations.py" />
     </list>
@@ -35,10 +35,22 @@
       <file leaf-file-name="nnet_score.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nnet_score.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="441">
-              <caret line="70" column="53" selection-start-line="70" selection-start-column="53" selection-end-line="70" selection-end-column="53" />
+            <state relative-caret-position="435">
+              <caret line="29" column="19" selection-start-line="29" selection-start-column="19" selection-end-line="29" selection-end-column="19" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="get_data_target.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/NNET/get_data_target.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1950">
+              <caret line="130" column="13" selection-start-line="130" selection-start-column="13" selection-end-line="130" selection-end-column="13" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -47,10 +59,10 @@
       <file leaf-file-name="nnet_class_one.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/NNET/nnet_class_one.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-870">
-              <caret line="49" column="30" selection-start-line="49" selection-start-column="30" selection-end-line="49" selection-end-column="30" />
+            <state relative-caret-position="810">
+              <caret line="54" column="22" selection-start-line="54" selection-start-column="22" selection-end-line="54" selection-end-column="22" />
               <folding>
-                <element signature="e#0#10#0" expanded="true" />
+                <element signature="e#0#18#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -59,10 +71,10 @@
       <file leaf-file-name="nnet_reg_one.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/NNET/nnet_reg_one.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-831">
-              <caret line="52" column="41" selection-start-line="52" selection-start-column="41" selection-end-line="52" selection-end-column="41" />
+            <state relative-caret-position="105">
+              <caret line="7" column="4" selection-start-line="7" selection-start-column="4" selection-end-line="7" selection-end-column="4" />
               <folding>
-                <element signature="e#0#10#0" expanded="true" />
+                <element signature="e#0#18#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -71,28 +83,32 @@
       <file leaf-file-name="nnet_class_one_time.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/NNET/nnet_class_one_time.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="390">
+              <caret line="48" column="0" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="nnet_reg_one_time.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="nnet_reg_one_time.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/NNET/nnet_reg_one_time.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="156">
-              <caret line="126" column="32" selection-start-line="126" selection-start-column="32" selection-end-line="126" selection-end-column="32" />
-              <folding />
+            <state relative-caret-position="915">
+              <caret line="77" column="0" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="plot_correlations.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="plot_correlations.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/plot_correlations.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="585">
-              <caret line="44" column="0" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
+            <state relative-caret-position="795">
+              <caret line="58" column="27" selection-start-line="58" selection-start-column="27" selection-end-line="58" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -143,31 +159,31 @@
         <option value="$PROJECT_DIR$/NNET/NnetReg.py" />
         <option value="$PROJECT_DIR$/rank_correlations.py" />
         <option value="$PROJECT_DIR$/requirements.txt" />
-        <option value="$PROJECT_DIR$/NNET/get_data_target.py" />
         <option value="$PROJECT_DIR$/NNET/nnet_ord.py" />
         <option value="$PROJECT_DIR$/NNET/nnet.py" />
-        <option value="$PROJECT_DIR$/NNET/NnetClassLearner.py" />
         <option value="$PROJECT_DIR$/DEEPBIND/binding_score.py" />
         <option value="$PROJECT_DIR$/outliers.py" />
-        <option value="$PROJECT_DIR$/NNET/README.md" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/NNET/nnet_class_one_mul.py" />
         <option value="$PROJECT_DIR$/NNET/nnet_reg_one_mul.py" />
-        <option value="$PROJECT_DIR$/NNET/NnetRegLearner.py" />
         <option value="$PROJECT_DIR$/NNET/nnet_reg.py" />
         <option value="$PROJECT_DIR$/NNET/nnet_class.py" />
-        <option value="$PROJECT_DIR$/NNET/nnet_reg_one.py" />
-        <option value="$PROJECT_DIR$/NNET/nnet_class_one.py" />
-        <option value="$PROJECT_DIR$/NNET/nnet_class_one_time.py" />
-        <option value="$PROJECT_DIR$/NNET/nnet_reg_one_time.py" />
         <option value="$PROJECT_DIR$/nnet_score.py" />
         <option value="$PROJECT_DIR$/plot_correlations.py" />
+        <option value="$PROJECT_DIR$/NNET/README.md" />
+        <option value="$PROJECT_DIR$/NNET/get_data_target.py" />
+        <option value="$PROJECT_DIR$/NNET/nnet_class_one.py" />
+        <option value="$PROJECT_DIR$/NNET/nnet_reg_one.py" />
+        <option value="$PROJECT_DIR$/NNET/NnetClassLearner.py" />
+        <option value="$PROJECT_DIR$/NNET/NnetRegLearner.py" />
+        <option value="$PROJECT_DIR$/NNET/nnet_reg_one_time.py" />
+        <option value="$PROJECT_DIR$/NNET/nnet_class_one_time.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="957" />
-    <option name="y" value="143" />
+    <option name="x" value="1107" />
+    <option name="y" value="155" />
     <option name="width" value="1408" />
     <option name="height" value="1157" />
   </component>
@@ -545,7 +561,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="957" y="143" width="1408" height="1157" extended-state="0" />
+    <frame x="1107" y="155" width="1408" height="1157" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15861572" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -715,14 +731,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/requirements.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="15" selection-start-line="6" selection-start-column="15" selection-end-line="6" selection-end-column="15" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/NNET/nnet_ord.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="855">
@@ -825,55 +833,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/NNET/README.md">
-      <provider editor-type-id="MarkdownFxPreviewEditor">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
-        <state split_layout="FIRST">
-          <first_editor relative-caret-position="195">
-            <caret line="13" column="81" selection-start-line="13" selection-start-column="81" selection-end-line="13" selection-end-column="81" />
-            <folding />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/NNET/get_data_target.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="337">
-          <caret line="67" column="4" selection-start-line="67" selection-start-column="4" selection-end-line="67" selection-end-column="4" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/venv/lib/python3.5/site-packages/matplotlib/pyplot.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="337">
           <caret line="1651" column="4" selection-start-line="1651" selection-start-column="4" selection-end-line="1651" selection-end-column="4" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/NNET/NnetClassLearner.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="8" selection-start-line="11" selection-start-column="8" selection-end-line="11" selection-end-column="8" />
-          <folding>
-            <element signature="e#64#85#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/NNET/NnetRegLearner.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1065">
-          <caret line="71" column="27" selection-start-line="71" selection-start-column="27" selection-end-line="71" selection-end-column="27" />
-          <folding>
-            <element signature="e#66#87#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -895,57 +859,111 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/nnet_score.py">
+    <entry file="file://$PROJECT_DIR$/requirements.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="441">
-          <caret line="70" column="53" selection-start-line="70" selection-start-column="53" selection-end-line="70" selection-end-column="53" />
+        <state relative-caret-position="90">
+          <caret line="6" column="15" selection-start-line="6" selection-start-column="15" selection-end-line="6" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NNET/README.md">
+      <provider editor-type-id="MarkdownFxPreviewEditor">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+        <state split_layout="FIRST">
+          <first_editor relative-caret-position="300">
+            <caret line="20" column="17" selection-start-line="20" selection-start-column="17" selection-end-line="20" selection-end-column="17" />
+            <folding />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NNET/nnet_reg_one.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="4" selection-start-line="7" selection-start-column="4" selection-end-line="7" selection-end-column="4" />
           <folding>
-            <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NNET/get_data_target.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1950">
+          <caret line="130" column="13" selection-start-line="130" selection-start-column="13" selection-end-line="130" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/NNET/nnet_class_one.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-870">
-          <caret line="49" column="30" selection-start-line="49" selection-start-column="30" selection-end-line="49" selection-end-column="30" />
+        <state relative-caret-position="810">
+          <caret line="54" column="22" selection-start-line="54" selection-start-column="22" selection-end-line="54" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/plot_correlations.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="795">
+          <caret line="58" column="27" selection-start-line="58" selection-start-column="27" selection-end-line="58" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nnet_score.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="29" column="19" selection-start-line="29" selection-start-column="19" selection-end-line="29" selection-end-column="19" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/NNET/nnet_reg_one.py">
+    <entry file="file://$PROJECT_DIR$/NNET/NnetClassLearner.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-831">
-          <caret line="52" column="41" selection-start-line="52" selection-start-column="41" selection-end-line="52" selection-end-column="41" />
+        <state relative-caret-position="696">
+          <caret line="74" column="8" selection-start-line="74" selection-start-column="8" selection-end-line="74" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NNET/NnetRegLearner.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="531">
+          <caret line="61" column="20" selection-start-line="61" selection-start-column="20" selection-end-line="61" selection-end-column="20" />
           <folding>
-            <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#66#87#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/NNET/nnet_class_one_time.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="390">
+          <caret line="48" column="0" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/NNET/nnet_reg_one_time.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="156">
-          <caret line="126" column="32" selection-start-line="126" selection-start-column="32" selection-end-line="126" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/plot_correlations.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="585">
-          <caret line="44" column="0" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="915">
+          <caret line="77" column="0" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

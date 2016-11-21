@@ -11,7 +11,7 @@ class NnetRegLearner:
 
     def __init__(self, attribute_size, output_size, n_hidden_layers=2, n_hidden_neurons=30):
         """
-
+        Initialization of Classification neural network.
         :param attribute_size: Number of input attributes for neural network
         :param n_hidden_layers: Number of hidden layers in neural network architecture.
         :param n_hidden_neurons: Number of hidden neurons in every hidden layer in neural network architecture.
@@ -57,7 +57,7 @@ class NnetRegLearner:
 
     def fit(self, trX, trY):
         """
-
+        Neural Network learning.
         :param trX: Input data for training (train X)
         :param trY: Output data for training (train y)
 
@@ -71,7 +71,7 @@ class NnetRegLearner:
 
     def predict(self, teX):
         """
-
+        Neural network predicting.
         :param teX: Input data for predicting (test X)
         :return: Predictions
         """

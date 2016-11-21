@@ -8,10 +8,10 @@ transcription factors (evaluated by deepbind).
 
 ###### Usage:
 python nnet_score.py <input_path> <output_path> <learning_type> <delimiter> <target_size>,
-where learning_type={class, class_one, reg, reg_one, ord}.
+where learning_type={class, class_one, class_one_time, reg, reg_one, reg_one_time, ord}.
 
 ###### Example:
-python nnet_score.py path/to/data_and_target_concatenated.csv path/to/results.csv reg $'\t' 14
+python nnet_score.py path/to/data_and_target_concatenated.csv path/to/correlation_results.csv reg $'\t' 14
 
 
 ### get_data_target.py
@@ -44,6 +44,20 @@ program can (manually) balance data.
 Program that uses regression neural network learner. If the problem
 is multi-target, the program handles every target separately. The
 program can (manually) balance data.
+
+### nnet_class_one_time.py
+
+Program that uses classification neural network learner. If the problem
+is multi-target, the program handles every target separately. The
+program can (manually) balance data. It takes expressions as attributes
+form every time interval available in one learning model. 
+
+### nnet_reg_one_time.py
+
+Program that uses regression neural network learner. If the problem
+is multi-target, the program handles every target separately. The
+program can (manually) balance data.It takes expressions as attributes
+form every time interval available in one learning model. 
 
 ### nnet_class.py
 

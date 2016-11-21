@@ -1,16 +1,21 @@
-import sys
-import time
-
 import numpy as np
 from sklearn.cross_validation import KFold
 from scipy.stats import spearmanr
-
-from NNET import get_data_target
-from NNET import NnetRegLearner
+from NNET import get_data_target, NnetRegLearner, nnet_reg_one
 
 
 def learn_and_score(scores_file, data_dir, rows, delimiter, target_size):
-    """Learning and correlation scoring input data with regressional Neural Network, one target per time. """
+    """
+    Neural network learning and correlation scoring. Regressional Neural Network, learning and predicting one target
+    per time on balanced or unbalanced data. It takes expressions from all time intervals at once as attributes to
+    neural network.
+    :param scores_file: The file with data and targets for neural network learning.
+    :param delimiter: The delimiter for the scores_file.
+    :param target_size: Number of targets in scores_file (the number of columns from the end of scores_file that we want
+    to extract and double).
+    :return: rhos and p-values of relative Spearman correlation, predictions and ids of instances that were included
+    in learning and testing.
+    """
 
     """ Get data and target tables. """
     data, target, _, _ = get_data_target.get_original_data(scores_file, delimiter, target_size, "reg")
@@ -31,10 +36,10 @@ def learn_and_score(scores_file, data_dir, rows, delimiter, target_size):
     n_hidden_n = int(max(data.shape[1], target.shape[1]) * 2 / 3)
     n_hidden_l = 2
 
-    # net = NnetRegLearner.NnetRegLearner(data.shape[1] + (target_size - 1), n_hidden_l, n_hidden_n)  # protwildtime
-    net = NnetRegLearner.NnetRegLearner(data.shape[1] + (target_size - 1) * len(rows), 1, n_hidden_l, n_hidden_n)  # protwildexptime
-    # net = NnetRegLearner.NnetRegLearner((target_size - 1), n_hidden_l, n_hidden_n)  # wildtime
-    # net = NnetRegLearner.NnetRegLearner((target_size - 1) * len(rows), 1, n_hidden_l, n_hidden_n)  # wildexptime
+    # net = NnetRegLearner.NnetRegLearner(data.shape[1] + (target_size - 1), 1, n_hidden_l, n_hidden_n)  # protwildtime
+    # net = NnetRegLearner.NnetRegLearner(data.shape[1] + (target_size - 1) * len(rows), 1, n_hidden_l, n_hidden_n)  # protwildexptime
+    # net = NnetRegLearner.NnetRegLearner(len(rows), 1, n_hidden_l, n_hidden_n)  # wildtime
+    net = NnetRegLearner.NnetRegLearner((target_size - 1) * len(rows), 1, n_hidden_l, n_hidden_n)  # wildexptime
 
     rhos = []
     p_values = []
@@ -46,17 +51,17 @@ def learn_and_score(scores_file, data_dir, rows, delimiter, target_size):
     down_per = 10  # 10th percentile, decides over analysis on Orange (obvious groups of expressions)
     up_per = 90  # 90th percentile, decides over analysis on Orange (obvious groups of expressions)
 
-    # max_len = get_max_len(target, target_size, down_per, up_per)  # balanced data
+    # max_len = nnet_reg_one.get_max_len(target, target_size, down_per, up_per)  # balanced data
     max_len = target.shape[0] / class_size  # unbalanced data
 
     # for t in range(target_size):
     for t in np.hstack([range(wild_type), range(wild_type+1, target_size)]):
         target_r = target[:, t]
         data_c = data
-        # data_c = np.hstack([data_c, np.hstack(all_targets[:, :, wildtype])])  # protwildtime
-        data_c = np.hstack([data_c, np.hstack(all_targets[:, :, :t]), np.hstack(all_targets[:, :, t + 1:])])  # protwildexptime
-        # data_c = np.hstack([np.hstack(all_targets[:, :, wildtype])])  # wildtime
-        # data_c = np.hstack([np.hstack(all_targets[:, :, :t]), np.hstack(all_targets[:, :, t + 1:])])  # wildexptime
+        # data_c = np.hstack([data_c, all_targets[:, :, wild_type].T])  # protwildtime
+        # data_c = np.hstack([data_c, np.hstack(all_targets[:, :, :t]), np.hstack(all_targets[:, :, t + 1:])])  # protwildexptime
+        # data_c = all_targets[:, :, wild_type].T  # wildtime
+        data_c = np.hstack([np.hstack(all_targets[:, :, :t]), np.hstack(all_targets[:, :, t + 1:])])  # wildexptime
         print(data_c.shape)
 
         """ Ignore missing attributes """
@@ -68,7 +73,7 @@ def learn_and_score(scores_file, data_dir, rows, delimiter, target_size):
             print(max_len * class_size, 2)
             continue
 
-        # data_b, targets, ids_b = get_balanced_data(target_r, data_c, max_len, ids_prob, down_per, up_per)  # balanced data
+        # data_b, targets, ids_b = nnet_reg_one.get_balanced_data(target_r, data_c, max_len, ids_prob, down_per, up_per)  # balanced data
         targets, data_b, ids_b = target_r.reshape(-1, 1), data_c, ids_prob  # unbalanced data
 
         probs = np.zeros((targets.shape[0], 2))
@@ -103,75 +108,3 @@ def learn_and_score(scores_file, data_dir, rows, delimiter, target_size):
         p_values.append(p)
     return rhos, p_values, np.hstack(all_probs), np.hstack(all_ids)
 
-
-def get_max_len(target, target_size, down_per, up_per):
-    """ Get length of one class in balanced data """
-
-    max_len = len(target)
-    for t in range(target_size):
-        targets = target[:, t]
-        if len(np.unique(targets)) == 1:
-            continue
-        down_10 = np.percentile(targets, down_per)
-        up_10 = np.percentile(targets, up_per)
-        down_10 = np.sum(targets < down_10)
-        up_10 = np.sum(targets > up_10)
-        if max_len > min(down_10, up_10):
-            max_len = min(down_10, up_10)
-    return max_len
-
-
-def get_balanced_data(targets, data, max_len, ids, down_per, up_per):
-    """ Balancing data (Make a set of instances of every class to equal size). """
-
-    down_10 = np.percentile(targets, down_per)
-    up_10 = np.percentile(targets, up_per)
-    nc = np.logical_and(down_10 <= targets, targets <= up_10)
-    len_nc = np.sum(nc)
-
-    id_nc = ids[nc]
-    data_nc = data[nc]
-    target_nc = targets[nc]
-
-    shuffle = np.random.permutation(len_nc)
-    target_nc = target_nc[shuffle][:max_len]
-    id_nc = id_nc[shuffle][:max_len]
-    data_nc = data_nc[shuffle][:max_len]
-
-    ids_prob = np.vstack([ids[down_10 >= targets][:max_len].reshape(-1, 1),
-                          ids[targets >= up_10][:max_len].reshape(-1, 1),
-                          id_nc.reshape(-1, 1)])
-    target_nc = np.vstack([targets[down_10 >= targets][:max_len].reshape(-1, 1),
-                           targets[targets >= up_10][:max_len].reshape(-1, 1),
-                           target_nc.reshape(-1, 1)])
-    data_nc = np.vstack([data[down_10 >= targets][:max_len],
-                         data[targets >= up_10][:max_len],
-                         data_nc])
-
-    shuffle = np.random.permutation(len(target_nc))
-    targets = target_nc[shuffle]
-    ids_prob = ids_prob[shuffle]
-    datas = data_nc[shuffle]
-    return datas, targets, ids_prob
-
-
-def main():
-    start = time.time()
-    arguments = sys.argv[1:]
-
-    if len(arguments) < 3:
-        print("Not enough arguments stated! Usage: \n"
-              "python nnet_reg_one.py <scores_file_path> <predicted_scores_path> <delimiter> <target_size>.")
-        sys.exit(0)
-
-    scores_file = arguments[0]
-    delimiter = arguments[1]
-    target_size = int(arguments[2])
-
-    learn_and_score(scores_file, delimiter, target_size)
-
-    end = time.time() - start
-    print("Program run for %.2f seconds." % end)
-
-if __name__ == '__main__':
-    main()
