@@ -39,62 +39,115 @@ def main():
 
     plt.figure("Correlation by time interval - classification")
     plt.subplot(211)
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[0]].T, axis=1), yerr=np.std(plots_time[[0]].T, axis=1))
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[1]].T, axis=1), yerr=np.std(plots_time[[1]].T, axis=1))
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[2]].T, axis=1), yerr=np.std(plots_time[[2]].T, axis=1))
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[3]].T, axis=1), yerr=np.std(plots_time[[3]].T, axis=1))
+    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[0]].T, axis=1),
+                 yerr=np.std(plots_time[[0]].T, axis=1), color='r')
+    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[1]].T, axis=1),
+                 yerr=np.std(plots_time[[1]].T, axis=1), color='g')
+    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[2]].T, axis=1),
+                 yerr=np.std(plots_time[[2]].T, axis=1), color='b')
+    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[3]].T, axis=1),
+                 yerr=np.std(plots_time[[3]].T, axis=1), color='m')
 
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[4]].T, axis=1), yerr=np.std(plots_time[[4]].T, axis=1))
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[5]].T, axis=1), yerr=np.std(plots_time[[5]].T, axis=1))
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[6]].T, axis=1), yerr=np.std(plots_time[[6]].T, axis=1))
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[7]].T, axis=1), yerr=np.std(plots_time[[7]].T, axis=1))
-    plt.xticks(np.arange(time_ints), ['0h', '2h', '4h', '6h', '8h', '10h', '12h', '14h', '16h', '18h', '20h', '22h', '24h'])
+    eb1 = plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[4]].T, axis=1),
+                       yerr=np.std(plots_time[[4]].T, axis=1), ls='--', color='r')
+    eb1[-1][0].set_linestyle('--')
+    eb1 = plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[5]].T, axis=1),
+                       yerr=np.std(plots_time[[5]].T, axis=1), ls='--', color='g')
+    eb1[-1][0].set_linestyle('--')
+    eb1 = plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[6]].T, axis=1),
+                       yerr=np.std(plots_time[[6]].T, axis=1), ls='--', color='b')
+    eb1[-1][0].set_linestyle('--')
+    eb1 = plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[7]].T, axis=1),
+                       yerr=np.std(plots_time[[7]].T, axis=1), ls='--', color='m')
+    eb1[-1][0].set_linestyle('--')
+    plt.xticks(np.arange(time_ints),
+               ['0h', '2h', '4h', '6h', '8h', '10h', '12h', '14h', '16h', '18h', '20h', '22h', '24h'])
     plt.legend(np.array(plots_names)[np.arange(9)], loc='upper left')
     plt.axis([0, 12, 0, 1])
     plt.grid()
 
-    plt.subplot(211)
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[8]].T, axis=1), yerr=np.std(plots_time[[8]].T, axis=1))
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[9]].T, axis=1), yerr=np.std(plots_time[[9]].T, axis=1))
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[10]].T, axis=1), yerr=np.std(plots_time[[10]].T, axis=1))
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[11]].T, axis=1), yerr=np.std(plots_time[[11]].T, axis=1))
+    plt.subplot(212)
 
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[12]].T, axis=1), yerr=np.std(plots_time[[12]].T, axis=1))
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[13]].T, axis=1), yerr=np.std(plots_time[[13]].T, axis=1))
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[14]].T, axis=1), yerr=np.std(plots_time[[14]].T, axis=1))
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[15]].T, axis=1), yerr=np.std(plots_time[[15]].T, axis=1))
-    plt.xticks(np.arange(time_ints), ['0h', '2h', '4h', '6h', '8h', '10h', '12h', '14h', '16h', '18h', '20h', '22h', '24h'])
-    plt.legend(np.array(plots_names)[np.arange(9, 16)], loc='upper left')
+    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[16]].T, axis=1),
+                 yerr=np.std(plots_time[[16]].T, axis=1), color='r')
+    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[17]].T, axis=1),
+                 yerr=np.std(plots_time[[17]].T, axis=1), color='g')
+    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[18]].T, axis=1),
+                 yerr=np.std(plots_time[[18]].T, axis=1), color='b')
+    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[19]].T, axis=1),
+                 yerr=np.std(plots_time[[19]].T, axis=1), color='m')
+
+    eb1 = plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[20]].T, axis=1),
+                       yerr=np.std(plots_time[[20]].T, axis=1), ls='--', color='r')
+    eb1[-1][0].set_linestyle('--')
+    eb1 = plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[21]].T, axis=1),
+                       yerr=np.std(plots_time[[21]].T, axis=1), ls='--', color='g')
+    eb1[-1][0].set_linestyle('--')
+    eb1 = plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[22]].T, axis=1),
+                       yerr=np.std(plots_time[[22]].T, axis=1), ls='--', color='b')
+    eb1[-1][0].set_linestyle('--')
+    eb1 = plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[23]].T, axis=1),
+                       yerr=np.std(plots_time[[23]].T, axis=1), ls='--', color='m')
+    eb1[-1][0].set_linestyle('--')
+    plt.xticks(np.arange(time_ints),
+               ['0h', '2h', '4h', '6h', '8h', '10h', '12h', '14h', '16h', '18h', '20h', '22h', '24h'])
+    plt.legend(np.array(plots_names)[np.arange(16, 24)], loc='upper left')
     plt.axis([0, 12, 0, 1])
     plt.grid()
 
     plt.figure("Correlation by time interval - regression")
     plt.subplot(211)
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[16]].T, axis=1), yerr=np.std(plots_time[[16]].T, axis=1))
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[17]].T, axis=1), yerr=np.std(plots_time[[17]].T, axis=1))
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[18]].T, axis=1), yerr=np.std(plots_time[[18]].T, axis=1))
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[19]].T, axis=1), yerr=np.std(plots_time[[19]].T, axis=1))
+    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[8]].T, axis=1),
+                 yerr=np.std(plots_time[[8]].T, axis=1), color='r')
+    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[9]].T, axis=1),
+                 yerr=np.std(plots_time[[9]].T, axis=1), color='g')
+    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[10]].T, axis=1),
+                 yerr=np.std(plots_time[[10]].T, axis=1), color='b')
+    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[11]].T, axis=1),
+                 yerr=np.std(plots_time[[11]].T, axis=1), color='m')
 
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[20]].T, axis=1), yerr=np.std(plots_time[[20]].T, axis=1))
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[21]].T, axis=1), yerr=np.std(plots_time[[21]].T, axis=1))
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[22]].T, axis=1), yerr=np.std(plots_time[[22]].T, axis=1))
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[23]].T, axis=1), yerr=np.std(plots_time[[23]].T, axis=1))
-    plt.xticks(np.arange(time_ints), ['0h', '2h', '4h', '6h', '8h', '10h', '12h', '14h', '16h', '18h', '20h', '22h', '24h'])
-    plt.legend(np.array(plots_names)[np.arange(16, 24)], loc='upper left')
+    eb1 = plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[12]].T, axis=1),
+                       yerr=np.std(plots_time[[12]].T, axis=1), ls='--', color='r')
+    eb1[-1][0].set_linestyle('--')
+    eb1 = plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[13]].T, axis=1),
+                       yerr=np.std(plots_time[[13]].T, axis=1), ls='--', color='g')
+    eb1[-1][0].set_linestyle('--')
+    eb1 = plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[14]].T, axis=1),
+                       yerr=np.std(plots_time[[14]].T, axis=1), ls='--', color='b')
+    eb1[-1][0].set_linestyle('--')
+    eb1 = plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[15]].T, axis=1),
+                       yerr=np.std(plots_time[[15]].T, axis=1), ls='--', color='m')
+    eb1[-1][0].set_linestyle('--')
+    plt.xticks(np.arange(time_ints),
+               ['0h', '2h', '4h', '6h', '8h', '10h', '12h', '14h', '16h', '18h', '20h', '22h', '24h'])
+    plt.legend(np.array(plots_names)[np.arange(8, 16)], loc='upper left')
     plt.axis([0, 12, 0, 1])
     plt.grid()
 
-    plt.subplot(211)
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[24]].T, axis=1), yerr=np.std(plots_time[[24]].T, axis=1))
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[25]].T, axis=1), yerr=np.std(plots_time[[25]].T, axis=1))
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[26]].T, axis=1), yerr=np.std(plots_time[[26]].T, axis=1))
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[27]].T, axis=1), yerr=np.std(plots_time[[27]].T, axis=1))
+    plt.subplot(212)
+    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[24]].T, axis=1),
+                 yerr=np.std(plots_time[[24]].T, axis=1), color='r')
+    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[25]].T, axis=1),
+                 yerr=np.std(plots_time[[25]].T, axis=1), color='g')
+    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[26]].T, axis=1),
+                 yerr=np.std(plots_time[[26]].T, axis=1), color='b')
+    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[27]].T, axis=1),
+                 yerr=np.std(plots_time[[27]].T, axis=1), color='m')
 
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[28]].T, axis=1), yerr=np.std(plots_time[[28]].T, axis=1))
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[29]].T, axis=1), yerr=np.std(plots_time[[29]].T, axis=1))
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[30]].T, axis=1), yerr=np.std(plots_time[[30]].T, axis=1))
-    plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[31]].T, axis=1), yerr=np.std(plots_time[[31]].T, axis=1))
-    plt.xticks(np.arange(time_ints), ['0h', '2h', '4h', '6h', '8h', '10h', '12h', '14h', '16h', '18h', '20h', '22h', '24h'])
+    eb1 = plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[28]].T, axis=1),
+                       yerr=np.std(plots_time[[28]].T, axis=1), ls='--', color='r')
+    eb1[-1][0].set_linestyle('--')
+    eb1 = plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[29]].T, axis=1),
+                       yerr=np.std(plots_time[[29]].T, axis=1), ls='--', color='g')
+    eb1[-1][0].set_linestyle('--')
+    eb1 = plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[30]].T, axis=1),
+                       yerr=np.std(plots_time[[30]].T, axis=1), ls='--', color='b')
+    eb1[-1][0].set_linestyle('--')
+    eb1 = plt.errorbar(np.arange(time_ints).reshape(-1, 1), np.mean(plots_time[[31]].T, axis=1),
+                       yerr=np.std(plots_time[[31]].T, axis=1), ls='--', color='m')
+    eb1[-1][0].set_linestyle('--')
+    plt.xticks(np.arange(time_ints),
+               ['0h', '2h', '4h', '6h', '8h', '10h', '12h', '14h', '16h', '18h', '20h', '22h', '24h'])
     plt.legend(np.array(plots_names)[np.arange(24, 32)], loc='upper left')
     plt.axis([0, 12, 0, 1])
     plt.grid()

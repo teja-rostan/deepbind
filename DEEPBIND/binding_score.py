@@ -61,12 +61,12 @@ def deep_bind_exec(features_ids, promoter_seq, results_txt, deepbind_path):
 
     promoter_seq_file = open(promoter_seq, "r")
     results_file = open(results_txt, "w")
-    subprocess.run([deepbind_path, features_ids], stdin=promoter_seq_file, stdout=results_file)
+    subprocess.run([deepbind_path, "--all-scores", features_ids], stdin=promoter_seq_file, stdout=results_file)
     promoter_seq_file.close()
     results_file.close()
 
 
-def deep_bind_exec_parallel(features_ids, promoter_seq, results_txt, deepbind_path, p):
+def deep_bind_exec_parallel(features_ids, promoter_seq, deepbind_path, p, promoter_ids, seq_len, final_results_file):
     """ Executes the deepbind program in parallel with starmap. Calls join_results."""
 
     result_paths = []
@@ -82,40 +82,61 @@ def deep_bind_exec_parallel(features_ids, promoter_seq, results_txt, deepbind_pa
     features.close()
     zipped = zip(feature_list, promoter_seq_list, result_paths, deepbind_paths)
     p.starmap(deep_bind_exec, zipped)
-    join_results(result_paths, results_txt)
+    write_results(result_paths, promoter_ids, seq_len, final_results_file)
 
 
-def get_binding_score(fasta_file, features_ids, deepbind_path, p, max_seq_len, final_results_file):
+def get_binding_score(fasta_file, features_ids, deepbind_path, p, seq_len, final_results_file):
     """ Prepares and calls deep_bind_exec_parallel. """
 
-    data_dir, data_file = os.path.split(final_results_file)
-    promoter_seq = data_dir + "/promoter.seq"
-    promoter_ids = data_dir + "/promoter.ids"
-    results_txt = data_dir + "/results.txt"
-    get_seq_and_id(fasta_file, promoter_seq, promoter_ids, max_seq_len)
-    deep_bind_exec_parallel(features_ids, promoter_seq, results_txt, deepbind_path, p)
-    return promoter_seq, promoter_ids, results_txt
+    data_dir, _ = os.path.split(fasta_file)
+    data_dir2, _ = os.path.split(final_results_file)
+    promoter_seq = data_dir + "/promoter_seq_with_exp.tab"
+    promoter_ids = data_dir + "/promoter_id_with_exp.tab"
+    # results_txt = data_dir2 + "/results.txt"
+    # get_seq_and_id(fasta_file, promoter_seq, promoter_ids, max_seq_len)
+    deep_bind_exec_parallel(features_ids, promoter_seq, deepbind_path, p, promoter_ids, seq_len, final_results_file)
+    # return promoter_seq, promoter_ids, results_txt
 
 
-def join_results(result_paths, results_txt):
+def write_results(result_paths, promoter_ids, seq_len, final_results_file):
     """ Concatenates id of sequence with scores."""
 
-    frames = []
-    for result_path in result_paths:
-        frames.append(pd.read_csv(result_path))
-        subprocess.run(['rm', result_path])
-    results = pd.concat(frames, axis=1)
-    results.to_csv(results_txt, sep='\t', index=None)
+    def remove_last_and_float(x):
+        x = x[:-1]
+        return list(map(float, x))
 
-
-def write_scores(promoter_ids, results_txt, final_results_file):
-    """ Writes joined results to "final_results_file"."""
-
+    # frames = []
     df1 = pd.read_csv(promoter_ids, header=None)
-    df2 = pd.read_csv(results_txt, delimiter="\t")
-    promoter_scores = pd.concat([df1, df2], axis=1)
-    promoter_scores = promoter_scores.rename(columns={0: 'ID'})
-    promoter_scores.to_csv(final_results_file, sep='\t', index=None)
+    data_dir, _ = os.path.split(final_results_file)
+    for result_path in result_paths:
+        col = pd.read_csv(result_path, squeeze=True)
+        print(col)
+        col_name = col.name
+        print(col_name)
+        col = col.str.split('\t')
+        col = col.apply(remove_last_and_float)
+        new_col = []
+        for index, row in col.iteritems():
+            rowl = len(row)
+            print(rowl)
+            missing = seq_len - 23 - rowl
+            print(missing)
+            nan_list = [np.nan] * missing
+            row = nan_list + row
+            new_col.append(row)
+        col = pd.DataFrame(new_col, index=None)
+        print(col)
+        promoter_scores = pd.concat([df1, col], axis=1, ignore_index=True)
+        promoter_scores = promoter_scores.round(decimals=2)
+        # promoter_scores = promoter_scores.rename(columns={0: 'ID'})
+        promoter_scores = promoter_scores.fillna('?')
+        new_col_names = ['ID'] + list(np.arange(len(list(promoter_scores.columns.values)) - 1).tolist())
+        promoter_scores.to_csv(data_dir + "/" + col_name + ".csv", sep='\t', index=None, header=new_col_names)
+
+        # frames.append(pd.read_csv(result_path))
+        subprocess.run(['rm', result_path])
+    # results = pd.concat(frames, axis=1)
+    # results.to_csv(results_txt, sep='\t', index=None)
 
 
 def write_ranked_scores(results_txt, promoter_ids, final_results_file):
@@ -150,8 +171,8 @@ def write_scores_modified(promoter_ids, results_txt, final_results_file, feature
 def remove_temp_files(promoter_seq, promoter_ids, results_txt):
     """ Removes all temp files."""
 
-    subprocess.run(['rm', promoter_seq])
-    subprocess.run(['rm', promoter_ids])
+    # subprocess.run(['rm', promoter_seq])
+    # subprocess.run(['rm', promoter_ids])
     subprocess.run(['rm', results_txt])
 
 
@@ -176,13 +197,12 @@ def main():
     print("Program running on " + str(num_cpu) + " CPU cores.")
 
     p = mp.Pool(num_cpu)
-    num_of_seq_and_leq(fasta_file, max_seq_len)
-    promoter_seq, promoter_ids, results_txt = get_binding_score(fasta_file, features_ids, deepbind_path, p, max_seq_len,
-                                                                final_results_file)
-    write_scores(promoter_ids, results_txt, final_results_file)
+    # num_of_seq_and_leq(fasta_file, max_seq_len)
+    get_binding_score(fasta_file, features_ids, deepbind_path, p, max_seq_len, final_results_file)
+    # write_scores(promoter_ids, results_txt, final_results_file, max_seq_len)
     # write_scores_modified(promoter_ids, results_txt, final_results_file, features_ids)
     # write_ranked_scores(results_txt, promoter_ids, final_results_file)
-    remove_temp_files(promoter_seq, promoter_ids, results_txt)
+    # remove_temp_files(promoter_seq, promoter_ids, results_txt)
 
     end = time.time() - start
     print("Program has successfully written scores at " + final_results_file + ".")

@@ -20,7 +20,6 @@ def learn_and_score(scores_file, data_dir, rows, delimiter, target_size):
     """ Get data and target tables. """
     data, target, raw_target, target_class = get_data_target.get_original_data(scores_file, delimiter, target_size,
                                                                                "class")
-
     all_targets = []
     for row in rows:
         scores_file = data_dir + "/" + row[:-1]
@@ -37,10 +36,15 @@ def learn_and_score(scores_file, data_dir, rows, delimiter, target_size):
     n_hidden_l = 2
     n_hidden_n = int(max(data.shape[1], target.shape[1]) * 2 / 3)
 
-    # net = NnetClassLearner.NnetClassLearner(data.shape[1] + (target_size - 1), class_size, n_hidden_l, n_hidden_n)  # protwildtime
-    # net = NnetClassLearner.NnetClassLearner(data.shape[1] + (target_size - 1) * len(rows), class_size, n_hidden_l, n_hidden_n)  # protwildtexptime
-    # net = NnetClassLearner.NnetClassLearner(len(rows), class_size, n_hidden_l, n_hidden_n)  # wildtime
-    net = NnetClassLearner.NnetClassLearner((target_size - 1) * len(rows), class_size, n_hidden_l, n_hidden_n)  # wildtexptime
+    # protwildtime
+    # net = NnetClassLearner.NnetClassLearner(data.shape[1] + (target_size - 1), class_size, n_hidden_l, n_hidden_n)
+    # protwildtexptime
+    # net = NnetClassLearner.NnetClassLearner(data.shape[1] + (target_size - 1) * len(rows), class_size, n_hidden_l,
+    #                                         n_hidden_n)
+    # wildtime
+    # net = NnetClassLearner.NnetClassLearner(len(rows), class_size, n_hidden_l, n_hidden_n)
+    # wildtexptime
+    net = NnetClassLearner.NnetClassLearner((target_size - 1) * len(rows), class_size, n_hidden_l, n_hidden_n)
 
     rhos = []
     p_values = []
@@ -56,10 +60,13 @@ def learn_and_score(scores_file, data_dir, rows, delimiter, target_size):
     for t in np.hstack([range(wild_type), range(wild_type+1, target_size)]):
         target_c = target_class[:, t]
         data_c = data
-        # data_c = np.hstack([data_c, all_targets[:, :, wild_type].T])  # protwildtime
-        # data_c = np.hstack([data_c, np.hstack(all_targets[:, :, :t]), np.hstack(all_targets[:, :, t + 1:])])  # protwildexptime
+        # protwildtime
+        # data_c = np.hstack([data_c, all_targets[:, :, wild_type].T])
+        # protwildexptime
+        # data_c = np.hstack([data_c, np.hstack(all_targets[:, :, :t]), np.hstack(all_targets[:, :, t + 1:])])
         # data_c = all_targets[:, :, wild_type].T # wildtime
-        data_c = np.hstack([np.hstack(all_targets[:, :, :t]), np.hstack(all_targets[:, :, t + 1:])])  # wildexptime
+        # wildexptime
+        data_c = np.hstack([np.hstack(all_targets[:, :, :t]), np.hstack(all_targets[:, :, t + 1:])])
         print(data_c.shape)
 
         """ Ignore missing attributes """
@@ -71,8 +78,10 @@ def learn_and_score(scores_file, data_dir, rows, delimiter, target_size):
             print(max_len * class_size, 2)
             continue
 
-        # targets, ids_b, data_b = nnet_class_one.get_balanced_data(t, class_size, target_c, data_c, target, max_len, ids)  # balanced data
-        targets, data_b, ids_b = target[:, class_size * t:class_size * t + class_size], data_c, ids  # unbalanced data
+        # balanced data
+        # targets, ids_b, data_b = nnet_class_one.get_balanced_data(t, class_size, target_c, data_c, target, max_len, ids)
+        # unbalanced data
+        targets, data_b, ids_b = target[:, class_size * t:class_size * t + class_size], data_c, ids
 
         probs = np.zeros((targets.shape[0], 2))
         ids_end = np.zeros((targets.shape[0], 1)).astype(str)
