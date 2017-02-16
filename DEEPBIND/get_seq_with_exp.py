@@ -8,7 +8,7 @@ from NNET import get_data_target
 def get_seq_and_id(fasta_file, promoter_seq, promoter_ids, threshold, scores_file, delimiter):
     """ Extracts raw sequence strings and ids to separate files."""
 
-    map_txt = "/Users/tejarostan/PycharmProjects/deepBind/DEEPBIND/DDB_DDB_G/DDB-GeneID-UniProt.txt"
+    map_txt = "DDB_DDB_G/DDB-GeneID-UniProt.txt"
     df = pd.read_csv(map_txt, sep="\t")
     ddb_id = list(df['DDBDDB ID'].as_matrix())
     ddb_g_id = list(df['DDB_G ID'].as_matrix())
@@ -29,7 +29,6 @@ def get_seq_and_id(fasta_file, promoter_seq, promoter_ids, threshold, scores_fil
         except ValueError:
             ddbg_record_id_short = record_id_short
         if ddbg_record_id_short in all_valid_records:
-            print(record_id_short + "  NOOOOOOOOT")
             record_ids.append(ddbg_record_id_short)
             seq = str(record.seq)[-threshold:]
             sequences.append(seq)

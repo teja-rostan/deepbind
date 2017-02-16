@@ -34,9 +34,9 @@ def learn_and_score(scores_file, delimiter, target_size):
     n_hidden_l = 2
     n_hidden_n = int(max(data.shape[1], target.shape[1]) * 2 / 3)
 
-    # net = NnetRegLearner.NnetRegLearner(data.shape[1], 1, n_hidden_l, n_hidden_n)  # wild/protwild or exp/protexp
+    net = NnetRegLearner.NnetRegLearner(data.shape[1], 1, n_hidden_l, n_hidden_n)  # wild/protwild or exp/protexp
     # net = NnetRegLearner.NnetRegLearner(data.shape[1] + target_size - 1, 1, n_hidden_l, n_hidden_n)  # protwildexp
-    net = NnetRegLearner.NnetRegLearner(target_size - 1, 1, n_hidden_l, n_hidden_n)  # wildexp
+    # net = NnetRegLearner.NnetRegLearner(target_size - 1, 1, n_hidden_l, n_hidden_n)  # wildexp
 
     rhos = []
     p_values = []
@@ -50,12 +50,12 @@ def learn_and_score(scores_file, delimiter, target_size):
     max_len = get_max_len(target, target_size, down_per, up_per)  # balanced data
     # max_len = target.shape[0] / class_size  # unbalanced data
 
-    # for t in range(target_size):
-    for t in np.hstack([range(wild_type), range(wild_type+1, target_size)]):
+    for t in range(target_size):
+    # for t in np.hstack([range(wild_type), range(wild_type+1, target_size)]):
         target_r = target[:, t]
         # data_c = np.hstack([data, target[:, :t], target[:, t + 1:]])  # protwildexp
-        data_c = np.hstack([target[:, :t], target[:, t + 1:]])  # wildexp
-        # data_c = data  # wild/protwild or exp/protexp
+        # data_c = np.hstack([target[:, :t], target[:, t + 1:]])  # wildexp
+        data_c = data  # wild/protwild or exp/protexp
 
         """ Ignore missing attributes """
         if len(np.unique(target_r)) == 1:

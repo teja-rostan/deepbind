@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
+import os
 
 
 def one_hot_decoder_prediction(y, k):
@@ -89,6 +90,8 @@ def get_original_data(scores_file, delimiter, target_size, nn_type):
     raw target expressions and classified target.
     """
 
+
+
     """ get data """
     df = pd.read_csv(scores_file, sep=delimiter)
     input_matrix = df.select_dtypes(include=['float64']).as_matrix()
@@ -96,6 +99,25 @@ def get_original_data(scores_file, delimiter, target_size, nn_type):
     """ split data and target """
     data = input_matrix[:, :-target_size]
     target = input_matrix[:, -target_size:]
+
+    if nn_type == "conv":
+        image_size = 500
+        data_size = 240
+
+        ids = df['ID'].as_matrix()
+        data = np.zeros((data_size, image_size, image_size))
+        input_dir = "results/binding_scores/bind_reverse/"
+        sequences = np.array(os.listdir(input_dir))
+        new_target = []
+
+        for i in range(data_size):
+            data[i] = pd.read_csv(input_dir + sequences[i], sep=delimiter).drop('ID', axis=1).as_matrix()[:image_size, -image_size:]
+            print(target[np.where(ids == sequences[i][:-4])[0][0]])
+            new_target.append(target[np.where(ids == sequences[i][:-4])[0][0]])
+
+        data = data.reshape((-1, 1, image_size, image_size))
+        target = np.array(new_target)
+
     raw_expressions = np.copy(target)
     target_class = classification(target, 10, 90)
 

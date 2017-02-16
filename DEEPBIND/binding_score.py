@@ -92,10 +92,7 @@ def get_binding_score(fasta_file, features_ids, deepbind_path, p, seq_len, final
     data_dir2, _ = os.path.split(final_results_file)
     promoter_seq = data_dir + "/promoter_seq_with_exp.tab"
     promoter_ids = data_dir + "/promoter_id_with_exp.tab"
-    # results_txt = data_dir2 + "/results.txt"
-    # get_seq_and_id(fasta_file, promoter_seq, promoter_ids, max_seq_len)
     deep_bind_exec_parallel(features_ids, promoter_seq, deepbind_path, p, promoter_ids, seq_len, final_results_file)
-    # return promoter_seq, promoter_ids, results_txt
 
 
 def write_results(result_paths, promoter_ids, seq_len, final_results_file):
@@ -105,7 +102,6 @@ def write_results(result_paths, promoter_ids, seq_len, final_results_file):
         x = x[:-1]
         return list(map(float, x))
 
-    # frames = []
     df1 = pd.read_csv(promoter_ids, header=None)
     data_dir, _ = os.path.split(final_results_file)
     for result_path in result_paths:
@@ -128,15 +124,10 @@ def write_results(result_paths, promoter_ids, seq_len, final_results_file):
         print(col)
         promoter_scores = pd.concat([df1, col], axis=1, ignore_index=True)
         promoter_scores = promoter_scores.round(decimals=2)
-        # promoter_scores = promoter_scores.rename(columns={0: 'ID'})
         promoter_scores = promoter_scores.fillna('?')
         new_col_names = ['ID'] + list(np.arange(len(list(promoter_scores.columns.values)) - 1).tolist())
         promoter_scores.to_csv(data_dir + "/" + col_name + ".csv", sep='\t', index=None, header=new_col_names)
-
-        # frames.append(pd.read_csv(result_path))
         subprocess.run(['rm', result_path])
-    # results = pd.concat(frames, axis=1)
-    # results.to_csv(results_txt, sep='\t', index=None)
 
 
 def write_ranked_scores(results_txt, promoter_ids, final_results_file):
@@ -168,11 +159,9 @@ def write_scores_modified(promoter_ids, results_txt, final_results_file, feature
     df2.to_csv(final_results_file, sep='\t', index=None, header=names)
 
 
-def remove_temp_files(promoter_seq, promoter_ids, results_txt):
+def remove_temp_files(results_txt):
     """ Removes all temp files."""
 
-    # subprocess.run(['rm', promoter_seq])
-    # subprocess.run(['rm', promoter_ids])
     subprocess.run(['rm', results_txt])
 
 
@@ -197,12 +186,7 @@ def main():
     print("Program running on " + str(num_cpu) + " CPU cores.")
 
     p = mp.Pool(num_cpu)
-    # num_of_seq_and_leq(fasta_file, max_seq_len)
     get_binding_score(fasta_file, features_ids, deepbind_path, p, max_seq_len, final_results_file)
-    # write_scores(promoter_ids, results_txt, final_results_file, max_seq_len)
-    # write_scores_modified(promoter_ids, results_txt, final_results_file, features_ids)
-    # write_ranked_scores(results_txt, promoter_ids, final_results_file)
-    # remove_temp_files(promoter_seq, promoter_ids, results_txt)
 
     end = time.time() - start
     print("Program has successfully written scores at " + final_results_file + ".")

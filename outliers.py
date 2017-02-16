@@ -44,7 +44,6 @@ def main():
     rows = list_file.readlines()
     list_file.close()
 
-    # id = get_data_target.get_ids(data_dir + "/" + rows[0][:-1], delimiter, 'ID')
     cols = get_data_target.get_cols(data_dir + "/" + rows[0][:-1], delimiter, 0, -target_size)[2:]
 
     scores_file = data_dir + "/" + rows[0][:-1]

@@ -1,6 +1,8 @@
 import theano
 from theano import tensor as T
 from theano.sandbox.rng_mrg import MRG_RandomStreams as RandomStreams
+from theano.tensor.nnet.conv import conv2d
+from theano.tensor.signal.downsample import max_pool_2d
 import numpy as np
 
 
@@ -106,6 +108,24 @@ def model3(X, w_h, w_h2, w_h3, w_o, p_drop_input, p_drop_hidden):
     return py_x
 
 
+def model4(X, w_h, w_h2, w_h3, w_h4, w_o, p_drop_input, p_drop_hidden):
+    X = dropout(X, p_drop_input)
+    h = rectify(T.dot(X, w_h))
+
+    h = dropout(h, p_drop_hidden)
+    h2 = rectify(T.dot(h, w_h2))
+
+    h2 = dropout(h2, p_drop_hidden)
+    h3 = rectify(T.dot(h2, w_h3))
+
+    h3 = dropout(h3, p_drop_hidden)
+    h4 = rectify(T.dot(h3, w_h4))
+
+    h4 = dropout(h4, p_drop_hidden)
+    py_x = softmax(T.dot(h4, w_o))
+    return py_x
+
+
 def model_reg(X, w_h, w_h2, w_o, p_drop_input, p_drop_hidden):
     X = dropout(X, p_drop_input)
     h = rectify(T.dot(X, w_h))
@@ -131,3 +151,27 @@ def model_reg3(X, w_h, w_h2, w_h3, w_o, p_drop_input, p_drop_hidden):
     h3 = dropout(h3, p_drop_hidden)
     py_x = (T.dot(h3, w_o))
     return py_x
+
+
+def conv_model(X, w_h, w_h2, w_h3, w_h4, w_h5, w_o, p_drop_conv, p_drop_hidden):
+    h1a = rectify(conv2d(X, w_h, border_mode='full'))
+    h1 = max_pool_2d(h1a, (1, 4))
+
+    h1 = dropout(h1, p_drop_conv)
+    h2a = rectify(conv2d(h1, w_h2))
+    h2 = max_pool_2d(h2a, (1, 4))
+
+    h2 = dropout(h2, p_drop_conv)
+    h3a = rectify(conv2d(h2, w_h3))
+    h3b = max_pool_2d(h3a, (1, 4))
+    h3 = T.flatten(h3b, outdim=2)
+
+    h3 = dropout(h3, p_drop_conv)
+    h4 = rectify(T.dot(h3, w_h4))
+
+    h4 = dropout(h4, p_drop_conv)
+    h5 = rectify(T.dot(h4, w_h5))
+
+    h5 = dropout(h5, p_drop_hidden)
+    pyx = softmax(T.dot(h5, w_o))
+    return pyx

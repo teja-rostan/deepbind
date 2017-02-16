@@ -59,7 +59,7 @@ def learn_and_score(scores_file, data_dir, rows, delimiter, target_size):
     # for t in range(target_size):
     for t in np.hstack([range(wild_type), range(wild_type+1, target_size)]):
         target_c = target_class[:, t]
-        data_c = data
+        # data_c = data
         # protwildtime
         # data_c = np.hstack([data_c, all_targets[:, :, wild_type].T])
         # protwildexptime

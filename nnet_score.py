@@ -3,7 +3,7 @@ import time
 import numpy as np
 import os
 import pandas as pd
-from NNET import nnet_class, nnet_reg, nnet_ord, nnet_reg_one, nnet_class_one, nnet_class_one_time, nnet_reg_one_time
+from NNET import nnet_class, nnet_reg, nnet_ord, nnet_reg_one, nnet_class_one,  cnnet_class_one, nnet_class_one_time, nnet_reg_one_time
 
 help = \
     """
@@ -13,7 +13,7 @@ help = \
 
     Usage:
         python nnet_score.py <input_path> <output_path> <learning_type> <delimiter> <target_size>,\n"
-        "where learning_type={class, class_one, clas_one_time, reg, reg_one, reg_one_time, ord}".
+        "where learning_type={class, class_one, clas_one_time, reg, reg_one, reg_one_time, ord, conv}".
 
     Example:
         python nnet_score.py input_files.txt results.csv reg $'\\t' 14
@@ -46,7 +46,7 @@ def main():
     rows = list_file.readlines()
     list_file.close()
 
-    for row in rows:
+    for row in rows[8:11]:
         scores_file = data_dir + "/" + row[:-1]
 
         col_names.append(row[:-4])
@@ -76,6 +76,8 @@ def main():
             probs, ids, spear = nnet_ord.learn_and_score(scores_file, delimiter, target_size)
             nn_probs_file = data_dir_nn + "/prob" + row[8:11] + "_" + data_file
             nn_spear_file = data_dir_nn + "/spearman" + row[8:11] + "_" + data_file
+            nn_scores.append(np.hstack([probs, ids]))
+
 
         elif learning_type == "class_one_time":
             rhos, p_values, probs, ids = nnet_class_one_time.learn_and_score(scores_file, data_dir, rows, delimiter, target_size)
@@ -89,25 +91,30 @@ def main():
             corr_scores.append(p_values)
             nn_scores.append(np.hstack([probs, ids]))
 
+        elif learning_type == "conv":
+            rhos, p_values, probs, ids = cnnet_class_one.learn_and_score(scores_file, delimiter, target_size)
+            corr_scores.append(rhos)
+            corr_scores.append(p_values)
+            nn_scores.append(np.hstack([probs, ids]))
+
         else:
             print("Error: learning_type unknown! Usage: \n"
                   "python nnet_score.py <input_path> <output_path> <learning_type> <delimiter> <target_size>,\n"
                   "where learning_type is class/ord/reg/reg_one.")
 
-    if learning_type == "reg_one" or learning_type == "class_one" or learning_type == "class_one_time" or learning_type == "reg_one_time":
+    if learning_type == "reg_one" or learning_type == "class_one" or learning_type == "class_one_time" or learning_type == "reg_one_time" or learning_type == 'conv':
         nn_one_file = data_dir_nn + "/spearman_one" + "_" + data_file
         # df = pd.DataFrame(data=np.array(corr_scores),
         #                   index=(['rho', 'p-value'] * len(rows)), columns=cols[-target_size:])
-        df = pd.DataFrame(data=np.array(corr_scores), index=(['rho', 'p-value'] * len(rows)))
+        df = pd.DataFrame(data=np.array(corr_scores), index=(['rho', 'p-value'] * len(col_names)))
         df = df.round(decimals=4)
         df.to_csv(nn_one_file, sep=delimiter)
 
-        # nn_scores.append(np.hstack([probs, ids]))
-        # nn_probs_file = data_dir_nn + "/prob_one" + "_" + data_file
-        # print(nn_probs_file)
-        # df = pd.DataFrame(data=np.vstack(nn_scores), columns=cols)
-        # df = df.round(decimals=2)
-        # df.to_csv(nn_probs_file, sep=delimiter)
+        nn_probs_file = data_dir_nn + "/prob_one" + "_" + data_file
+        print(nn_probs_file)
+        df = pd.DataFrame(data=np.vstack(nn_scores))
+        df = df.round(decimals=2)
+        df.to_csv(nn_probs_file, sep=delimiter)
 
     end = time.time() - start
     print("Program run for %.2f seconds." % end)

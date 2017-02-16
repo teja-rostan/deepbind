@@ -56,6 +56,21 @@ class NnetClassLearner:
             self.train = theano.function(inputs=[X, Y], outputs=cost, updates=updates, allow_input_downcast=True)
             self.predict_ = theano.function(inputs=[X], outputs=py_x, allow_input_downcast=True)
 
+        elif self.n_hidden_layers == 4:
+
+            self.w_h3 = nnet.init_weights((self.n_hidden_neurons, self.n_hidden_neurons))
+            self.w_h4 = nnet.init_weights((self.n_hidden_neurons, self.n_hidden_neurons))
+
+            noise_py_x = nnet.model4(X, self.w_h, self.w_h2, self.w_h3, self.w_h4, self.w_o, 0.2, 0.5)
+            py_x = nnet.model4(X, self.w_h, self.w_h2, self.w_h3, self.w_h4, self.w_o, 0., 0.)
+
+            cost = T.mean(T.nnet.categorical_crossentropy(noise_py_x, Y))
+            params = [self.w_h, self.w_h2, self.w_h3, self.w_h4, self.w_o]
+            updates = nnet.RMSprop(cost, params, lr=0.001)
+
+            self.train = theano.function(inputs=[X, Y], outputs=cost, updates=updates, allow_input_downcast=True)
+            self.predict_ = theano.function(inputs=[X], outputs=py_x, allow_input_downcast=True)
+
     def fit(self, trX, trY):
         """
         Neural Network learning.
@@ -84,6 +99,9 @@ class NnetClassLearner:
         self.w_h2.set_value(nnet.rand_weights((self.n_hidden_neurons, self.n_hidden_neurons)))
         self.w_o.set_value(nnet.rand_weights((self.n_hidden_neurons, self.class_size)))
 
-        if self.n_hidden_layers == 3:
+        if self.n_hidden_layers > 2:
             self.w_h3.set_value(nnet.rand_weights((self.n_hidden_neurons, self.n_hidden_neurons)))
+
+        if self.n_hidden_layers == 4:
+            self.w_h4.set_value(nnet.rand_weights((self.n_hidden_neurons, self.n_hidden_neurons)))
         return prY

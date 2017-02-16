@@ -1,13 +1,14 @@
 import numpy as np
 from sklearn.cross_validation import KFold
 from scipy.stats import spearmanr
-from NNET import get_data_target, NnetClassLearner
+from NNET import get_data_target, CnnetClassLearner
 import pandas as pd
+import os
 
 
 def learn_and_score(scores_file, delimiter, target_size):
     """
-    Neural network learning and correlation scoring. Classificational Neural Network, learning and predicting one target
+    Covnolutional Neural network learning and correlation scoring. Learning and predicting one target
     per time on balanced or unbalanced data.
     :param scores_file: The file with data and targets for neural network learning.
     :param delimiter: The delimiter for the scores_file.
@@ -19,23 +20,14 @@ def learn_and_score(scores_file, delimiter, target_size):
 
     """ Get data and target tables. """
     data, target, raw_target, target_class = get_data_target.get_original_data(scores_file, delimiter, target_size, "class")
-    data = pd.read_csv("~/deepbindProject/results/pca/pca_13_2_2017/concat.csv", sep=delimiter).drop('ID', axis=1).as_matrix()
+
     wild_type = 11  # eleventh target attribute is a wild-type
-
-    # data = np.hstack([data, raw_target[:, :wild_type], raw_target[:, wild_type + 1:]]) # protexp
-    # data = np.hstack([raw_target[:, :wild_type], raw_target[:, wild_type + 1:]])  # exp
-
-    # data = np.hstack([data, raw_target[:, wild_type].reshape(-1, 1)])  # protwild
-    # data = np.hstack([raw_target[:, wild_type].reshape(-1, 1)])  # wild
 
     """ Neural network architecture initialisation. """
     class_size = 3
-    n_hidden_l = 3
-    n_hidden_n = int(max(data.shape[1], target.shape[1]) * 2 / 3)
+    n_hidden_n = int(max(data.shape[1], target.shape[1]) * 5 / 3)
 
-    net = NnetClassLearner.NnetClassLearner(data.shape[1], class_size, n_hidden_l, n_hidden_n) # wild/protwild or exp/protexp
-    # net = NnetClassLearner.NnetClassLearner(data.shape[1] + target_size - 1, class_size, n_hidden_l, n_hidden_n)  # protwildexp
-    # net = NnetClassLearner.NnetClassLearner(target_size - 1, class_size, n_hidden_l, n_hidden_n)  # wildexp
+    net = CnnetClassLearner.CnnetClassLearner(class_size, n_hidden_n)
 
     rhos = []
     p_values = []
@@ -45,12 +37,9 @@ def learn_and_score(scores_file, delimiter, target_size):
     # max_len = get_max_len(target, target_class, target_size)  # balanced data
     max_len = target.shape[0] / class_size  # unbalanced data
 
+    nn_scores = []
     for t in range(target_size):
-    # for t in np.hstack([range(wild_type), range(wild_type+1, target_size)]):
         target_c = target_class[:, t]
-        # data_c = np.hstack([data, raw_target[:, :t], raw_target[:, t + 1:]])  # protwildexp
-        # data_c = np.hstack([raw_target[:, :t], raw_target[:, t + 1:]])  # wildexp
-        data_c = data  # # wild/protwild or exp/protexp
 
         """ Ignore missing attributes """
         if len(np.unique(target_c)) == 1:
@@ -62,38 +51,49 @@ def learn_and_score(scores_file, delimiter, target_size):
             continue
 
         # targets, ids_b, data_b = get_balanced_data(t, class_size, target_c, data_c, target, max_len, ids)  # balanced data
-        targets, data_b, ids_b = target[:, class_size * t:class_size * t + class_size], data_c, ids  # unbalanced data
+        targets, data, ids_b = target[:, class_size * t:class_size * t + class_size], data, ids  # unbalanced data
 
-        probs = np.zeros((targets.shape[0], 2))
+        probs = np.zeros((targets.shape[0], 5))
         ids_end = np.zeros((targets.shape[0], 1)).astype(str)
 
-        print(data_b.shape, targets.shape)
         """ Split to train and test 10-fold Cross-Validation """
         skf = KFold(targets.shape[0], n_folds=10, shuffle=True)
         idx = 0
         for train_index, test_index in skf:
-            trX, teX = data_b[train_index], data_b[test_index]
-            # trX, teX = data_b, data_b # for testing on training data (overfitting)
+            trX, teX = data[train_index], data[test_index]
             trY, teY = targets[train_index], targets[test_index]
-            # trY, teY = targets, targets  # for testing on training data (overfitting)
 
+            teY2 = np.argmax(teY, axis=1)
+            not_ones = teY2[teY2 != 1]
+            not_ones_arg = [teY2 != 1]
+
+            if len(not_ones) == 0:
+                continue
             """ Learning and predicting """
             net.fit(trX, trY)
             prY = net.predict(teX)
+            prY2 = np.argmax(prY, axis=1)
+
+            maj = np.ones(np.shape(not_ones)) * (np.bincount(teY2 + 1).argmax() - 1)
+            print(np.mean(not_ones == maj), np.mean(not_ones == prY2[not_ones_arg]), '|', majority(trY, teY)[0], np.mean(np.argmax(teY, axis=1) == prY2))
+            print(not_ones, maj.astype(int), prY2[not_ones_arg])
+
+            nn_scores.append(np.mean(not_ones == prY2[not_ones_arg]))
             print(majority(trY, teY)[0], np.mean(np.argmax(teY, axis=1) == prY))
 
             """ Storing results... """
-            probs[idx:idx+len(teY), 0] = prY.flatten()
-            probs[idx:idx+len(teY), 1] = np.argmax(teY, axis=1).flatten()
+            probs[idx:idx+len(teY), 0:-2] = prY
+            probs[idx:idx+len(teY), -2] = np.argmax(teY, axis=1).flatten()
+            probs[idx:idx+len(teY), -1] = prY2.flatten()
             ids_end[idx:idx+len(teY), 0] = ids_b[test_index].flatten()
-            # ids_end[idx:idx+len(teY), 0] = ids_b.flatten()  # for testing on training data (overfitting)
             idx += len(teY)
-            # break
+
         all_probs.append(np.around(probs, decimals=2))
         all_ids.append(ids_end)
-        rho, p = spearmanr(probs[:, 0], probs[:, 1])
+        rho, p = spearmanr(probs[:, -1], probs[:, -2])
         rhos.append(rho)
         p_values.append(p)
+    print(np.mean(nn_scores))
     return rhos, p_values, np.hstack(all_probs), np.hstack(all_ids)
 
 
