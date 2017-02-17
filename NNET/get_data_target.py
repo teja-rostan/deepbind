@@ -100,6 +100,8 @@ def get_original_data(scores_file, delimiter, target_size, nn_type):
     data = input_matrix[:, :-target_size]
     target = input_matrix[:, -target_size:]
 
+    target_class = classification(target, 10, 90)
+
     if nn_type == "conv":
         image_size = 500
         data_size = 240
@@ -108,20 +110,23 @@ def get_original_data(scores_file, delimiter, target_size, nn_type):
         data = np.zeros((data_size, image_size, image_size))
         input_dir = "results/binding_scores/bind_reverse/"
         sequences = np.array(os.listdir(input_dir))
+        new_target_class = []
         new_target = []
 
         for i in range(data_size):
             data[i] = pd.read_csv(input_dir + sequences[i], sep=delimiter).drop('ID', axis=1).as_matrix()[:image_size, -image_size:]
-            print(target[np.where(ids == sequences[i][:-4])[0][0]])
-            new_target.append(target[np.where(ids == sequences[i][:-4])[0][0]])
+            idx = np.where(ids == sequences[i][:-4])[0][0]
+            new_target_class.append(target_class[idx])
+            new_target.append(target[idx])
 
         data = data.reshape((-1, 1, image_size, image_size))
+        target_class = np.array(new_target_class)
+        print(np.unique(target_class, return_counts=True))
         target = np.array(new_target)
 
     raw_expressions = np.copy(target)
-    target_class = classification(target, 10, 90)
 
-    if nn_type == "class":
+    if nn_type == "class" or nn_type == "conv":
         target = one_hot_encoder_target(target_class, 3)
 
     elif nn_type == "ord":

@@ -19,7 +19,9 @@ def learn_and_score(scores_file, delimiter, target_size):
     """
 
     """ Get data and target tables. """
-    data, target, raw_target, target_class = get_data_target.get_original_data(scores_file, delimiter, target_size, "class")
+    data, target, _, target_class = get_data_target.get_original_data(scores_file, delimiter, target_size, "conv")
+
+    #print(target)
 
     wild_type = 11  # eleventh target attribute is a wild-type
 
@@ -47,11 +49,13 @@ def learn_and_score(scores_file, delimiter, target_size):
             p_values.append(0)
             all_probs.append(np.zeros((max_len * class_size, 2)))
             all_ids.append(np.zeros((max_len * class_size, 1)).astype(str))
-            print(max_len * class_size, 2)
+            # print(max_len * class_size, 2)
             continue
 
         # targets, ids_b, data_b = get_balanced_data(t, class_size, target_c, data_c, target, max_len, ids)  # balanced data
         targets, data, ids_b = target[:, class_size * t:class_size * t + class_size], data, ids  # unbalanced data
+
+        #print(targets)
 
         probs = np.zeros((targets.shape[0], 5))
         ids_end = np.zeros((targets.shape[0], 1)).astype(str)
@@ -74,12 +78,17 @@ def learn_and_score(scores_file, delimiter, target_size):
             prY = net.predict(teX)
             prY2 = np.argmax(prY, axis=1)
 
-            maj = np.ones(np.shape(not_ones)) * (np.bincount(teY2 + 1).argmax() - 1)
-            print(np.mean(not_ones == maj), np.mean(not_ones == prY2[not_ones_arg]), '|', majority(trY, teY)[0], np.mean(np.argmax(teY, axis=1) == prY2))
-            print(not_ones, maj.astype(int), prY2[not_ones_arg])
+            maj = np.ones(np.shape(not_ones)) * (np.bincount(not_ones + 1).argmax() - 1)
+            A = np.mean(not_ones == maj)
+            B = np.mean(not_ones == prY2[not_ones_arg])
+            C = majority(trY, teY)[0]
+            D = np.mean(np.argmax(teY, axis=1) == prY2)
+            print("A", A, B, '|', C, D)
+            #print("B", not_ones, maj.astype(int), prY2[not_ones_arg])
+            print(prY2)
+            print(teY2)
 
             nn_scores.append(np.mean(not_ones == prY2[not_ones_arg]))
-            print(majority(trY, teY)[0], np.mean(np.argmax(teY, axis=1) == prY))
 
             """ Storing results... """
             probs[idx:idx+len(teY), 0:-2] = prY
@@ -93,7 +102,7 @@ def learn_and_score(scores_file, delimiter, target_size):
         rho, p = spearmanr(probs[:, -1], probs[:, -2])
         rhos.append(rho)
         p_values.append(p)
-    print(np.mean(nn_scores))
+    print("D", np.mean(nn_scores))
     return rhos, p_values, np.hstack(all_probs), np.hstack(all_ids)
 
 

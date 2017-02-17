@@ -34,8 +34,12 @@ def main():
     sort_data = pd.read_csv(sort_file, sep=" ").as_matrix()[:, 0]
 
     for i in range(0, len(sort_data), at_once):
+        if len(sort_data) - i < at_once:
+            at_once = len(sort_data) - i
+
         all_best_tfs_names = []
         all_best_tfs = np.zeros((at_once, max_size, max_size))
+
         for j, f in enumerate(sort_data):
             if j < 877:
                 all_best_tfs_names.append(str(f[:10]))
